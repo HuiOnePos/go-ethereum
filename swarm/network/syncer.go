@@ -22,8 +22,8 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/swarm/storage"
+	"p2pay/log"
+	"p2pay/swarm/storage"
 )
 
 // syncer parameters (global, not peer specific) default values

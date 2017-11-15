@@ -30,8 +30,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ethereum/go-ethereum/accounts/keystore"
-	"github.com/ethereum/go-ethereum/core/types"
+	"p2pay/accounts/keystore"
+	"p2pay/core/types"
 )
 
 // Tests that the account management snippets work correctly.

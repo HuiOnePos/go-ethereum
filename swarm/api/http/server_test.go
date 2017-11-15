@@ -26,11 +26,11 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/swarm/api"
-	swarm "github.com/ethereum/go-ethereum/swarm/api/client"
-	"github.com/ethereum/go-ethereum/swarm/storage"
-	"github.com/ethereum/go-ethereum/swarm/testutil"
+	"p2pay/common"
+	"p2pay/swarm/api"
+	swarm "p2pay/swarm/api/client"
+	"p2pay/swarm/storage"
+	"p2pay/swarm/testutil"
 )
 
 func TestBzzrGetPath(t *testing.T) {

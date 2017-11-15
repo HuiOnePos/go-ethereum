@@ -22,8 +22,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/log"
+	"p2pay/core"
+	"p2pay/log"
+
 	"github.com/olekukonko/tablewriter"
 )
 

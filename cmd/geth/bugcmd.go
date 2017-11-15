@@ -26,10 +26,11 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/cmd/internal/browser"
-	"github.com/ethereum/go-ethereum/params"
+	"p2pay/cmd/internal/browser"
+	"p2pay/params"
 
-	"github.com/ethereum/go-ethereum/cmd/utils"
+	"p2pay/cmd/utils"
+
 	cli "gopkg.in/urfave/cli.v1"
 )
 

@@ -23,9 +23,10 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/core/vm"
+	"p2pay/common"
+	"p2pay/common/hexutil"
+	"p2pay/core/vm"
+
 	"github.com/robertkrimen/otto"
 )
 

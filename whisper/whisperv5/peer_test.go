@@ -25,11 +25,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/p2p/discover"
-	"github.com/ethereum/go-ethereum/p2p/nat"
+	"p2pay/common"
+	"p2pay/crypto"
+	"p2pay/p2p"
+	"p2pay/p2p/discover"
+	"p2pay/p2p/nat"
 )
 
 var keys []string = []string{

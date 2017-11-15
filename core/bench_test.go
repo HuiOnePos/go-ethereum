@@ -23,14 +23,14 @@ import (
 	"os"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/math"
-	"github.com/ethereum/go-ethereum/consensus/ethash"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/params"
+	"p2pay/common"
+	"p2pay/common/math"
+	"p2pay/consensus/ethash"
+	"p2pay/core/types"
+	"p2pay/core/vm"
+	"p2pay/crypto"
+	"p2pay/ethdb"
+	"p2pay/params"
 )
 
 func BenchmarkInsertChain_empty_memdb(b *testing.B) {

@@ -19,10 +19,10 @@ package core
 import (
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/consensus"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/core/vm"
+	"p2pay/common"
+	"p2pay/consensus"
+	"p2pay/core/types"
+	"p2pay/core/vm"
 )
 
 // ChainContext supports retrieving headers and consensus parameters from the

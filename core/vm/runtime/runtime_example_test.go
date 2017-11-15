@@ -19,8 +19,8 @@ package runtime_test
 import (
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/vm/runtime"
+	"p2pay/common"
+	"p2pay/core/vm/runtime"
 )
 
 func ExampleExecute() {

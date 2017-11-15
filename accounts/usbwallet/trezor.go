@@ -27,12 +27,13 @@ import (
 	"io"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/accounts/usbwallet/internal/trezor"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/log"
+	"p2pay/accounts"
+	"p2pay/accounts/usbwallet/internal/trezor"
+	"p2pay/common"
+	"p2pay/common/hexutil"
+	"p2pay/core/types"
+	"p2pay/log"
+
 	"github.com/golang/protobuf/proto"
 )
 

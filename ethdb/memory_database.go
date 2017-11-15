@@ -20,7 +20,7 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/ethereum/go-ethereum/common"
+	"p2pay/common"
 )
 
 /*

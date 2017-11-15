@@ -23,13 +23,13 @@ import (
 	"os"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/event"
-	"github.com/ethereum/go-ethereum/params"
+	"p2pay/common"
+	"p2pay/core"
+	"p2pay/core/types"
+	"p2pay/crypto"
+	"p2pay/ethdb"
+	"p2pay/event"
+	"p2pay/params"
 )
 
 func makeReceipt(addr common.Address) *types.Receipt {

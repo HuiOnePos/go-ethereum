@@ -28,11 +28,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/event"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/p2p/discover"
-	"github.com/ethereum/go-ethereum/p2p/simulations/adapters"
-	"github.com/ethereum/go-ethereum/rpc"
+	"p2pay/event"
+	"p2pay/p2p"
+	"p2pay/p2p/discover"
+	"p2pay/p2p/simulations/adapters"
+	"p2pay/rpc"
+
 	"github.com/julienschmidt/httprouter"
 	"golang.org/x/net/websocket"
 )

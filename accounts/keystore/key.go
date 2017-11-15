@@ -29,9 +29,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
+	"p2pay/accounts"
+	"p2pay/common"
+	"p2pay/crypto"
+
 	"github.com/pborman/uuid"
 )
 

@@ -35,12 +35,13 @@ import (
 	"syscall"
 	"time"
 
+	"p2pay/log"
+	"p2pay/node"
+	"p2pay/p2p"
+	"p2pay/p2p/discover"
+	"p2pay/rpc"
+
 	"github.com/docker/docker/pkg/reexec"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/node"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/p2p/discover"
-	"github.com/ethereum/go-ethereum/rpc"
 	"golang.org/x/net/websocket"
 )
 

@@ -21,8 +21,8 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/swarm/storage"
+	"p2pay/log"
+	"p2pay/swarm/storage"
 )
 
 const requesterCount = 3

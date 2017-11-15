@@ -26,13 +26,14 @@ import (
 	"testing"
 	"time"
 
+	"p2pay/accounts/keystore"
+	"p2pay/internal/cmdtest"
+	"p2pay/node"
+	"p2pay/p2p"
+	"p2pay/rpc"
+	"p2pay/swarm"
+
 	"github.com/docker/docker/pkg/reexec"
-	"github.com/ethereum/go-ethereum/accounts/keystore"
-	"github.com/ethereum/go-ethereum/internal/cmdtest"
-	"github.com/ethereum/go-ethereum/node"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/rpc"
-	"github.com/ethereum/go-ethereum/swarm"
 )
 
 func init() {

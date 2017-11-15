@@ -22,11 +22,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/p2p/discover"
-	"github.com/ethereum/go-ethereum/rpc"
+	"p2pay/common/hexutil"
+	"p2pay/crypto"
+	"p2pay/p2p"
+	"p2pay/p2p/discover"
+	"p2pay/rpc"
+
 	"github.com/rcrowley/go-metrics"
 )
 

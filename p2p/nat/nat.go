@@ -25,7 +25,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ethereum/go-ethereum/log"
+	"p2pay/log"
+
 	"github.com/jackpal/go-nat-pmp"
 )
 

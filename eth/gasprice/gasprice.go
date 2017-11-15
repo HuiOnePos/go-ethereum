@@ -22,10 +22,10 @@ import (
 	"sort"
 	"sync"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/internal/ethapi"
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/ethereum/go-ethereum/rpc"
+	"p2pay/common"
+	"p2pay/internal/ethapi"
+	"p2pay/params"
+	"p2pay/rpc"
 )
 
 var maxPrice = big.NewInt(500 * params.Shannon)

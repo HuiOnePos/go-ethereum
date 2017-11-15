@@ -20,7 +20,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/common"
+	"p2pay/common"
+
 	"gopkg.in/karalabe/cookiejar.v2/collections/prque"
 )
 

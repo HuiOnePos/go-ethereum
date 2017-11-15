@@ -25,14 +25,14 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/accounts/keystore"
-	"github.com/ethereum/go-ethereum/accounts/usbwallet"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/p2p/discover"
+	"p2pay/accounts"
+	"p2pay/accounts/keystore"
+	"p2pay/accounts/usbwallet"
+	"p2pay/common"
+	"p2pay/crypto"
+	"p2pay/log"
+	"p2pay/p2p"
+	"p2pay/p2p/discover"
 )
 
 const (

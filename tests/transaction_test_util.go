@@ -22,12 +22,12 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/common/math"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/ethereum/go-ethereum/rlp"
+	"p2pay/common"
+	"p2pay/common/hexutil"
+	"p2pay/common/math"
+	"p2pay/core/types"
+	"p2pay/params"
+	"p2pay/rlp"
 )
 
 // TransactionTest checks RLP decoding and sender derivation of transactions.

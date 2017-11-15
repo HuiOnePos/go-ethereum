@@ -21,12 +21,13 @@ import (
 	"reflect"
 	"testing"
 
+	"p2pay/common"
+	"p2pay/consensus/ethash"
+	"p2pay/core/vm"
+	"p2pay/ethdb"
+	"p2pay/params"
+
 	"github.com/davecgh/go-spew/spew"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/consensus/ethash"
-	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/params"
 )
 
 func TestDefaultGenesisBlock(t *testing.T) {

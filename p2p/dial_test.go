@@ -23,9 +23,10 @@ import (
 	"testing"
 	"time"
 
+	"p2pay/p2p/discover"
+	"p2pay/p2p/netutil"
+
 	"github.com/davecgh/go-spew/spew"
-	"github.com/ethereum/go-ethereum/p2p/discover"
-	"github.com/ethereum/go-ethereum/p2p/netutil"
 )
 
 func init() {

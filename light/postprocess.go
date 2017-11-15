@@ -23,15 +23,15 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/bitutil"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/ethereum/go-ethereum/rlp"
-	"github.com/ethereum/go-ethereum/trie"
+	"p2pay/common"
+	"p2pay/common/bitutil"
+	"p2pay/core"
+	"p2pay/core/types"
+	"p2pay/ethdb"
+	"p2pay/log"
+	"p2pay/params"
+	"p2pay/rlp"
+	"p2pay/trie"
 )
 
 const (

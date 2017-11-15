@@ -22,10 +22,10 @@ import (
 	"io"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/rlp"
-	"github.com/ethereum/go-ethereum/trie"
+	"p2pay/common"
+	"p2pay/crypto"
+	"p2pay/rlp"
+	"p2pay/trie"
 )
 
 var emptyCodeHash = crypto.Keccak256(nil)

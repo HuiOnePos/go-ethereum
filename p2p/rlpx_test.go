@@ -30,12 +30,13 @@ import (
 	"testing"
 	"time"
 
+	"p2pay/crypto"
+	"p2pay/crypto/ecies"
+	"p2pay/crypto/sha3"
+	"p2pay/p2p/discover"
+	"p2pay/rlp"
+
 	"github.com/davecgh/go-spew/spew"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/crypto/ecies"
-	"github.com/ethereum/go-ethereum/crypto/sha3"
-	"github.com/ethereum/go-ethereum/p2p/discover"
-	"github.com/ethereum/go-ethereum/rlp"
 )
 
 func TestSharedSecret(t *testing.T) {

@@ -24,12 +24,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	"github.com/ethereum/go-ethereum/accounts/abi/bind/backends"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/contracts/chequebook/contract"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/crypto"
+	"p2pay/accounts/abi/bind"
+	"p2pay/accounts/abi/bind/backends"
+	"p2pay/common"
+	"p2pay/contracts/chequebook/contract"
+	"p2pay/core"
+	"p2pay/crypto"
 )
 
 var (

@@ -24,7 +24,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/log"
+	"p2pay/log"
 )
 
 type brokenLimitedReader struct {

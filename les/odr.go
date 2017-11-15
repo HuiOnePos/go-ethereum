@@ -19,28 +19,28 @@ package les
 import (
 	"context"
 
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/light"
-	"github.com/ethereum/go-ethereum/log"
+	"p2pay/core"
+	"p2pay/ethdb"
+	"p2pay/light"
+	"p2pay/log"
 )
 
 // LesOdr implements light.OdrBackend
 type LesOdr struct {
-	db                                   ethdb.Database
+	db                                         ethdb.Database
 	chtIndexer, bloomTrieIndexer, bloomIndexer *core.ChainIndexer
-	retriever                            *retrieveManager
-	stop                                 chan struct{}
+	retriever                                  *retrieveManager
+	stop                                       chan struct{}
 }
 
 func NewLesOdr(db ethdb.Database, chtIndexer, bloomTrieIndexer, bloomIndexer *core.ChainIndexer, retriever *retrieveManager) *LesOdr {
 	return &LesOdr{
-		db:           db,
-		chtIndexer:   chtIndexer,
-		bloomTrieIndexer:   bloomTrieIndexer,
-		bloomIndexer: bloomIndexer,
-		retriever:    retriever,
-		stop:         make(chan struct{}),
+		db:               db,
+		chtIndexer:       chtIndexer,
+		bloomTrieIndexer: bloomTrieIndexer,
+		bloomIndexer:     bloomIndexer,
+		retriever:        retriever,
+		stop:             make(chan struct{}),
 	}
 }
 

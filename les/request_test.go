@@ -21,12 +21,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/eth"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/light"
+	"p2pay/common"
+	"p2pay/core"
+	"p2pay/crypto"
+	"p2pay/eth"
+	"p2pay/ethdb"
+	"p2pay/light"
 )
 
 var testBankSecureTrieKey = secAddr(testBankAddress)

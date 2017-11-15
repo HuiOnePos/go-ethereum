@@ -25,9 +25,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/core/types"
+	"p2pay/common"
+	"p2pay/common/hexutil"
+	"p2pay/core/types"
 )
 
 // Tests that verification caches can be correctly generated.

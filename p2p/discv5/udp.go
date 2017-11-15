@@ -24,12 +24,12 @@ import (
 	"net"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/p2p/nat"
-	"github.com/ethereum/go-ethereum/p2p/netutil"
-	"github.com/ethereum/go-ethereum/rlp"
+	"p2pay/common"
+	"p2pay/crypto"
+	"p2pay/log"
+	"p2pay/p2p/nat"
+	"p2pay/p2p/netutil"
+	"p2pay/rlp"
 )
 
 const Version = 4

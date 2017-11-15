@@ -19,7 +19,7 @@ package whisperv5
 import (
 	"testing"
 
-	"github.com/ethereum/go-ethereum/crypto"
+	"p2pay/crypto"
 )
 
 func BenchmarkDeriveKeyMaterial(b *testing.B) {

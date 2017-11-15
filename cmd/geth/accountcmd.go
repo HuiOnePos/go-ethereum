@@ -20,12 +20,13 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/accounts/keystore"
-	"github.com/ethereum/go-ethereum/cmd/utils"
-	"github.com/ethereum/go-ethereum/console"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/log"
+	"p2pay/accounts"
+	"p2pay/accounts/keystore"
+	"p2pay/cmd/utils"
+	"p2pay/console"
+	"p2pay/crypto"
+	"p2pay/log"
+
 	"gopkg.in/urfave/cli.v1"
 )
 

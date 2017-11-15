@@ -20,7 +20,7 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/core/types"
+	"p2pay/core/types"
 )
 
 // Tests that ethash works correctly in test mode.

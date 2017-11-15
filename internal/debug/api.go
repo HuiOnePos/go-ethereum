@@ -33,7 +33,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ethereum/go-ethereum/log"
+	"p2pay/log"
 )
 
 // Handler is the global debugging handler.

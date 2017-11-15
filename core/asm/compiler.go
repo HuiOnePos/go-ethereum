@@ -23,8 +23,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/common/math"
-	"github.com/ethereum/go-ethereum/core/vm"
+	"p2pay/common/math"
+	"p2pay/core/vm"
 )
 
 // Compiler contains information about the parsed source

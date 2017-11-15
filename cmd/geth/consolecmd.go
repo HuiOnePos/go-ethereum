@@ -21,10 +21,11 @@ import (
 	"os/signal"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/cmd/utils"
-	"github.com/ethereum/go-ethereum/console"
-	"github.com/ethereum/go-ethereum/node"
-	"github.com/ethereum/go-ethereum/rpc"
+	"p2pay/cmd/utils"
+	"p2pay/console"
+	"p2pay/node"
+	"p2pay/rpc"
+
 	"gopkg.in/urfave/cli.v1"
 )
 

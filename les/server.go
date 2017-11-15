@@ -24,17 +24,17 @@ import (
 	"math"
 	"sync"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/eth"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/les/flowcontrol"
-	"github.com/ethereum/go-ethereum/light"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/p2p/discv5"
-	"github.com/ethereum/go-ethereum/rlp"
+	"p2pay/common"
+	"p2pay/core"
+	"p2pay/core/types"
+	"p2pay/eth"
+	"p2pay/ethdb"
+	"p2pay/les/flowcontrol"
+	"p2pay/light"
+	"p2pay/log"
+	"p2pay/p2p"
+	"p2pay/p2p/discv5"
+	"p2pay/rlp"
 )
 
 type LesServer struct {

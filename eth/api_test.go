@@ -20,10 +20,11 @@ import (
 	"reflect"
 	"testing"
 
+	"p2pay/common"
+	"p2pay/core/state"
+	"p2pay/ethdb"
+
 	"github.com/davecgh/go-spew/spew"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/state"
-	"github.com/ethereum/go-ethereum/ethdb"
 )
 
 var dumper = spew.ConfigState{Indent: "    "}

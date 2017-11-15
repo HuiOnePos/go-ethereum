@@ -25,7 +25,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/log"
+	"p2pay/log"
 )
 
 // faucetDockerfile is the Dockerfile required to build an faucet container to

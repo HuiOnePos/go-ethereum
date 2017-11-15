@@ -21,8 +21,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
+	"p2pay/common"
+	"p2pay/crypto"
 )
 
 // Event is an event potentially triggered by the EVM's LOG mechanism. The Event

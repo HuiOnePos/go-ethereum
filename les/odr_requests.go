@@ -23,15 +23,15 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/light"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/rlp"
-	"github.com/ethereum/go-ethereum/trie"
+	"p2pay/common"
+	"p2pay/core"
+	"p2pay/core/types"
+	"p2pay/crypto"
+	"p2pay/ethdb"
+	"p2pay/light"
+	"p2pay/log"
+	"p2pay/rlp"
+	"p2pay/trie"
 )
 
 var (

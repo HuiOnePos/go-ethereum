@@ -23,11 +23,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/event"
-	"github.com/ethereum/go-ethereum/log"
+	"p2pay/common"
+	"p2pay/core/types"
+	"p2pay/ethdb"
+	"p2pay/event"
+	"p2pay/log"
 )
 
 // ChainIndexerBackend defines the methods needed to process chain segments in

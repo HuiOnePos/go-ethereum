@@ -25,14 +25,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/mclock"
-	"github.com/ethereum/go-ethereum/event"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/p2p/discover"
-	"github.com/ethereum/go-ethereum/p2p/discv5"
-	"github.com/ethereum/go-ethereum/p2p/nat"
-	"github.com/ethereum/go-ethereum/p2p/netutil"
+	"p2pay/common"
+	"p2pay/common/mclock"
+	"p2pay/event"
+	"p2pay/log"
+	"p2pay/p2p/discover"
+	"p2pay/p2p/discv5"
+	"p2pay/p2p/nat"
+	"p2pay/p2p/netutil"
 )
 
 const (

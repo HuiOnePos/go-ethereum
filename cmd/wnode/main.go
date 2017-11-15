@@ -34,16 +34,17 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ethereum/go-ethereum/cmd/utils"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/console"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/p2p/discover"
-	"github.com/ethereum/go-ethereum/p2p/nat"
-	"github.com/ethereum/go-ethereum/whisper/mailserver"
-	whisper "github.com/ethereum/go-ethereum/whisper/whisperv5"
+	"p2pay/cmd/utils"
+	"p2pay/common"
+	"p2pay/console"
+	"p2pay/crypto"
+	"p2pay/log"
+	"p2pay/p2p"
+	"p2pay/p2p/discover"
+	"p2pay/p2p/nat"
+	"p2pay/whisper/mailserver"
+	whisper "p2pay/whisper/whisperv5"
+
 	"golang.org/x/crypto/pbkdf2"
 )
 

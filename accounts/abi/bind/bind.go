@@ -28,7 +28,8 @@ import (
 	"text/template"
 	"unicode"
 
-	"github.com/ethereum/go-ethereum/accounts/abi"
+	"p2pay/accounts/abi"
+
 	"golang.org/x/tools/imports"
 )
 

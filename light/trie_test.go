@@ -22,14 +22,15 @@ import (
 	"fmt"
 	"testing"
 
+	"p2pay/consensus/ethash"
+	"p2pay/core"
+	"p2pay/core/state"
+	"p2pay/core/vm"
+	"p2pay/ethdb"
+	"p2pay/params"
+	"p2pay/trie"
+
 	"github.com/davecgh/go-spew/spew"
-	"github.com/ethereum/go-ethereum/consensus/ethash"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/state"
-	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/ethereum/go-ethereum/trie"
 )
 
 func TestNodeIterator(t *testing.T) {

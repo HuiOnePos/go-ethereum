@@ -21,9 +21,10 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto/sha3"
-	"github.com/ethereum/go-ethereum/log"
+	"p2pay/common"
+	"p2pay/crypto/sha3"
+	"p2pay/log"
+
 	"github.com/rcrowley/go-metrics"
 )
 

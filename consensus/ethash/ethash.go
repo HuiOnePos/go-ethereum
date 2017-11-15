@@ -31,10 +31,11 @@ import (
 	"time"
 	"unsafe"
 
+	"p2pay/consensus"
+	"p2pay/log"
+	"p2pay/rpc"
+
 	mmap "github.com/edsrzf/mmap-go"
-	"github.com/ethereum/go-ethereum/consensus"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/rpc"
 	metrics "github.com/rcrowley/go-metrics"
 )
 

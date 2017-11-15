@@ -20,10 +20,10 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	"github.com/ethereum/go-ethereum/accounts/abi/bind/backends"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/crypto"
+	"p2pay/accounts/abi/bind"
+	"p2pay/accounts/abi/bind/backends"
+	"p2pay/core"
+	"p2pay/crypto"
 )
 
 var (

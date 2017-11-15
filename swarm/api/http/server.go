@@ -35,10 +35,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/swarm/api"
-	"github.com/ethereum/go-ethereum/swarm/storage"
+	"p2pay/common"
+	"p2pay/log"
+	"p2pay/swarm/api"
+	"p2pay/swarm/storage"
+
 	"github.com/rs/cors"
 )
 

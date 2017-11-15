@@ -20,9 +20,9 @@ import (
 	"container/list"
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/event"
+	"p2pay/core/types"
+	"p2pay/ethdb"
+	"p2pay/event"
 )
 
 // Implement our EthTest Manager

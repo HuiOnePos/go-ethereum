@@ -21,17 +21,17 @@ import (
 	"fmt"
 	"sync/atomic"
 
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/consensus"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/state"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/eth/downloader"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/event"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/params"
+	"p2pay/accounts"
+	"p2pay/common"
+	"p2pay/consensus"
+	"p2pay/core"
+	"p2pay/core/state"
+	"p2pay/core/types"
+	"p2pay/eth/downloader"
+	"p2pay/ethdb"
+	"p2pay/event"
+	"p2pay/log"
+	"p2pay/params"
 )
 
 // Backend wraps all methods required for mining.

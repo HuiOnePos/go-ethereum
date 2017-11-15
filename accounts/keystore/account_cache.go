@@ -28,9 +28,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/log"
+	"p2pay/accounts"
+	"p2pay/common"
+	"p2pay/log"
+
 	"gopkg.in/fatih/set.v0"
 )
 

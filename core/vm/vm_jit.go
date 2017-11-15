@@ -38,9 +38,9 @@ import (
 	"math/big"
 	"unsafe"
 
-	"github.com/ethereum/go-ethereum/core/state"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/params"
+	"p2pay/core/state"
+	"p2pay/crypto"
+	"p2pay/params"
 )
 
 type JitVm struct {

@@ -22,8 +22,9 @@ import (
 	"io"
 	"sort"
 
-	"github.com/ethereum/go-ethereum/cmd/utils"
-	"github.com/ethereum/go-ethereum/internal/debug"
+	"p2pay/cmd/utils"
+	"p2pay/internal/debug"
+
 	"gopkg.in/urfave/cli.v1"
 )
 

@@ -27,13 +27,14 @@ import (
 	"sync/atomic"
 	"time"
 
-	ethereum "github.com/ethereum/go-ethereum"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/event"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/params"
+	ethereum "p2pay"
+	"p2pay/common"
+	"p2pay/core/types"
+	"p2pay/ethdb"
+	"p2pay/event"
+	"p2pay/log"
+	"p2pay/params"
+
 	"github.com/rcrowley/go-metrics"
 )
 

@@ -22,10 +22,10 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/accounts/abi"
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
+	"p2pay/accounts/abi"
+	"p2pay/accounts/abi/bind"
+	"p2pay/common"
+	"p2pay/core/types"
 )
 
 // Signer is an interaface defining the callback when a contract requires a

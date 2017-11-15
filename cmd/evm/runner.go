@@ -27,16 +27,17 @@ import (
 
 	goruntime "runtime"
 
-	"github.com/ethereum/go-ethereum/cmd/evm/internal/compiler"
-	"github.com/ethereum/go-ethereum/cmd/utils"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/state"
-	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/ethereum/go-ethereum/core/vm/runtime"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/params"
+	"p2pay/cmd/evm/internal/compiler"
+	"p2pay/cmd/utils"
+	"p2pay/common"
+	"p2pay/core"
+	"p2pay/core/state"
+	"p2pay/core/vm"
+	"p2pay/core/vm/runtime"
+	"p2pay/ethdb"
+	"p2pay/log"
+	"p2pay/params"
+
 	cli "gopkg.in/urfave/cli.v1"
 )
 

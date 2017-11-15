@@ -24,7 +24,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/log"
+	"p2pay/log"
 )
 
 // dashboardContent is the actual dashboard HTML content to serve up when users

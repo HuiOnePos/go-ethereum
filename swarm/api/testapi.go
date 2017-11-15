@@ -17,7 +17,7 @@
 package api
 
 import (
-	"github.com/ethereum/go-ethereum/swarm/network"
+	"p2pay/swarm/network"
 )
 
 type Control struct {

@@ -27,10 +27,10 @@ import (
 	"errors"
 	"strconv"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/crypto/ecies"
-	"github.com/ethereum/go-ethereum/log"
+	"p2pay/common"
+	"p2pay/crypto"
+	"p2pay/crypto/ecies"
+	"p2pay/log"
 )
 
 // Options specifies the exact way a message should be wrapped into an Envelope.

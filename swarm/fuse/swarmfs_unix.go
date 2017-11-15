@@ -27,11 +27,12 @@ import (
 	"sync"
 	"time"
 
+	"p2pay/common"
+	"p2pay/log"
+	"p2pay/swarm/api"
+
 	"bazil.org/fuse"
 	"bazil.org/fuse/fs"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/swarm/api"
 )
 
 var (

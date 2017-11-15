@@ -20,7 +20,7 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
+	"p2pay/common"
 )
 
 func TestSet(t *testing.T) {

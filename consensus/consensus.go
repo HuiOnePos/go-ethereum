@@ -18,11 +18,11 @@
 package consensus
 
 import (
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/state"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/ethereum/go-ethereum/rpc"
+	"p2pay/common"
+	"p2pay/core/state"
+	"p2pay/core/types"
+	"p2pay/params"
+	"p2pay/rpc"
 )
 
 // ChainReader defines a small collection of methods needed to access the local

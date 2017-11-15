@@ -20,10 +20,11 @@ import (
 	"bytes"
 	"encoding/json"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/params"
+	"p2pay/common"
+	"p2pay/core/types"
+	"p2pay/ethdb"
+	"p2pay/params"
+
 	lru "github.com/hashicorp/golang-lru"
 )
 

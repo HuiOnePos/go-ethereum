@@ -20,7 +20,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
+	"p2pay/common"
 )
 
 // Tests that the node iterator indeed walks over the entire database contents.

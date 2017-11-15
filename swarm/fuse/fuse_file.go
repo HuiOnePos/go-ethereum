@@ -19,15 +19,16 @@
 package fuse
 
 import (
-	"bazil.org/fuse"
-	"bazil.org/fuse/fs"
 	"errors"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/swarm/storage"
-	"golang.org/x/net/context"
 	"io"
 	"os"
+	"p2pay/log"
+	"p2pay/swarm/storage"
 	"sync"
+
+	"bazil.org/fuse"
+	"bazil.org/fuse/fs"
+	"golang.org/x/net/context"
 )
 
 const (

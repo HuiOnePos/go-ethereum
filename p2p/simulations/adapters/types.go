@@ -24,12 +24,13 @@ import (
 	"net"
 	"os"
 
+	"p2pay/crypto"
+	"p2pay/node"
+	"p2pay/p2p"
+	"p2pay/p2p/discover"
+	"p2pay/rpc"
+
 	"github.com/docker/docker/pkg/reexec"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/node"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/p2p/discover"
-	"github.com/ethereum/go-ethereum/rpc"
 )
 
 // Node represents a node in a simulation network which is created by a

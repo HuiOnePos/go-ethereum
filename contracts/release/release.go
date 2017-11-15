@@ -25,15 +25,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/eth"
-	"github.com/ethereum/go-ethereum/internal/ethapi"
-	"github.com/ethereum/go-ethereum/les"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/node"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/rpc"
+	"p2pay/accounts/abi/bind"
+	"p2pay/common"
+	"p2pay/eth"
+	"p2pay/internal/ethapi"
+	"p2pay/les"
+	"p2pay/log"
+	"p2pay/node"
+	"p2pay/p2p"
+	"p2pay/rpc"
 )
 
 // Interval to check for new releases

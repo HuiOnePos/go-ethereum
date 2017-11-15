@@ -23,11 +23,11 @@ import (
 	"net"
 	"sync"
 
-	"github.com/ethereum/go-ethereum/event"
-	"github.com/ethereum/go-ethereum/node"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/p2p/discover"
-	"github.com/ethereum/go-ethereum/rpc"
+	"p2pay/event"
+	"p2pay/node"
+	"p2pay/p2p"
+	"p2pay/p2p/discover"
+	"p2pay/rpc"
 )
 
 // SimAdapter is a NodeAdapter which creates in-memory simulation nodes and

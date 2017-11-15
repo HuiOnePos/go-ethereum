@@ -30,9 +30,10 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/log"
+	"p2pay/common"
+	"p2pay/core"
+	"p2pay/log"
+
 	"golang.org/x/crypto/ssh/terminal"
 )
 

@@ -26,10 +26,11 @@ import (
 	"testing"
 	"time"
 
+	"p2pay/common"
+	"p2pay/crypto"
+	"p2pay/rlp"
+
 	"github.com/davecgh/go-spew/spew"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/rlp"
 )
 
 func init() {

@@ -30,9 +30,9 @@ import (
 
 	check "gopkg.in/check.v1"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/ethdb"
+	"p2pay/common"
+	"p2pay/core/types"
+	"p2pay/ethdb"
 )
 
 // Tests that updating a state trie does not leak any database writes prior to

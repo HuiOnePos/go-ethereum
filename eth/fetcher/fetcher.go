@@ -22,10 +22,11 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/consensus"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/log"
+	"p2pay/common"
+	"p2pay/consensus"
+	"p2pay/core/types"
+	"p2pay/log"
+
 	"gopkg.in/karalabe/cookiejar.v2/collections/prque"
 )
 

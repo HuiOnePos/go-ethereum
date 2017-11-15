@@ -27,8 +27,8 @@ import (
 	"testing/quick"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
+	"p2pay/common"
+	"p2pay/crypto"
 )
 
 func ExampleNewNode() {

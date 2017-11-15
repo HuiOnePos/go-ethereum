@@ -25,13 +25,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/state"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/event"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/metrics"
-	"github.com/ethereum/go-ethereum/params"
+	"p2pay/common"
+	"p2pay/core/state"
+	"p2pay/core/types"
+	"p2pay/event"
+	"p2pay/log"
+	"p2pay/metrics"
+	"p2pay/params"
+
 	"gopkg.in/karalabe/cookiejar.v2/collections/prque"
 )
 

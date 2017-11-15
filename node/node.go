@@ -26,13 +26,14 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/event"
-	"github.com/ethereum/go-ethereum/internal/debug"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/p2p"
-	"github.com/ethereum/go-ethereum/rpc"
+	"p2pay/accounts"
+	"p2pay/ethdb"
+	"p2pay/event"
+	"p2pay/internal/debug"
+	"p2pay/log"
+	"p2pay/p2p"
+	"p2pay/rpc"
+
 	"github.com/prometheus/prometheus/util/flock"
 )
 

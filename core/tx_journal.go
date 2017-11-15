@@ -21,10 +21,10 @@ import (
 	"io"
 	"os"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/rlp"
+	"p2pay/common"
+	"p2pay/core/types"
+	"p2pay/log"
+	"p2pay/rlp"
 )
 
 // errNoActiveJournal is returned if a transaction is attempted to be inserted

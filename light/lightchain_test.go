@@ -21,12 +21,12 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/consensus/ethash"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/params"
+	"p2pay/common"
+	"p2pay/consensus/ethash"
+	"p2pay/core"
+	"p2pay/core/types"
+	"p2pay/ethdb"
+	"p2pay/params"
 )
 
 // So we can deterministically seed different blockchains

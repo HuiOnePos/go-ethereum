@@ -22,10 +22,10 @@ import (
 	"io"
 	"io/ioutil"
 
-	"github.com/ethereum/go-ethereum/accounts/keystore"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/crypto"
+	"p2pay/accounts/keystore"
+	"p2pay/common"
+	"p2pay/core/types"
+	"p2pay/crypto"
 )
 
 // NewTransactor is a utility method to easily create a transaction signer from

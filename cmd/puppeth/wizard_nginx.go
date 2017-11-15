@@ -19,7 +19,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/log"
+	"p2pay/log"
 )
 
 // ensureVirtualHost checks whether a reverse-proxy is running on the specified

@@ -21,17 +21,17 @@ import (
 	"context"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/state"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/ethereum/go-ethereum/eth/downloader"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/event"
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/ethereum/go-ethereum/rpc"
+	"p2pay/accounts"
+	"p2pay/common"
+	"p2pay/core"
+	"p2pay/core/state"
+	"p2pay/core/types"
+	"p2pay/core/vm"
+	"p2pay/eth/downloader"
+	"p2pay/ethdb"
+	"p2pay/event"
+	"p2pay/params"
+	"p2pay/rpc"
 )
 
 // Backend interface provides the common API services (that are provided by

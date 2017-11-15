@@ -23,12 +23,12 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/state"
-	"github.com/ethereum/go-ethereum/crypto/sha3"
-	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/trie"
+	"p2pay/common"
+	"p2pay/core/state"
+	"p2pay/crypto/sha3"
+	"p2pay/ethdb"
+	"p2pay/log"
+	"p2pay/trie"
 )
 
 // stateReq represents a batch of state fetch requests groupped together into

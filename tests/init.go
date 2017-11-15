@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/params"
+	"p2pay/params"
 )
 
 // This table defines supported forks and their chain config.
