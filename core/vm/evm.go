@@ -116,7 +116,7 @@ func NewEVM(ctx Context, statedb StateDB, chainConfig *params.ChainConfig, vmCon
 		chainConfig: chainConfig,
 		chainRules:  chainConfig.Rules(ctx.BlockNumber),
 	}
-
+	//创建一个翻译器？
 	evm.interpreter = NewInterpreter(evm, vmConfig)
 	return evm
 }
@@ -298,6 +298,7 @@ func (evm *EVM) StaticCall(caller ContractRef, addr common.Address, input []byte
 }
 
 // Create creates a new contract using code as deployment code.
+//caller :from account addr,code:transaction.PayLoad,gas,value 转账金额，此处应该就是创建智能合约地址
 func (evm *EVM) Create(caller ContractRef, code []byte, gas uint64, value *big.Int) (ret []byte, contractAddr common.Address, leftOverGas uint64, err error) {
 
 	// Depth check execution. Fail if we're trying to execute above the
@@ -305,15 +306,18 @@ func (evm *EVM) Create(caller ContractRef, code []byte, gas uint64, value *big.I
 	if evm.depth > int(params.CallCreateDepth) {
 		return nil, common.Address{}, gas, ErrDepth
 	}
+	//判断from 的账户是否足够扣除转账金额的
 	if !evm.CanTransfer(evm.StateDB, caller.Address(), value) {
 		return nil, common.Address{}, gas, ErrInsufficientBalance
 	}
 	// Ensure there's no existing contract already at the designated address
+	//交易笔数+1
 	nonce := evm.StateDB.GetNonce(caller.Address())
 	evm.StateDB.SetNonce(caller.Address(), nonce+1)
-
+	//创建合约地址，利用from account addr 和他的当前交易笔数
 	contractAddr = crypto.CreateAddress(caller.Address(), nonce)
 	contractHash := evm.StateDB.GetCodeHash(contractAddr)
+	//如果新生成的地址存在state，则返回报错
 	if evm.StateDB.GetNonce(contractAddr) != 0 || (contractHash != (common.Hash{}) && contractHash != emptyCodeHash) {
 		return nil, common.Address{}, 0, ErrContractAddressCollision
 	}
@@ -323,11 +327,13 @@ func (evm *EVM) Create(caller ContractRef, code []byte, gas uint64, value *big.I
 	if evm.ChainConfig().IsEIP158(evm.BlockNumber) {
 		evm.StateDB.SetNonce(contractAddr, 1)
 	}
+	//进行from 到to的余额转账
 	evm.Transfer(evm.StateDB, caller.Address(), contractAddr, value)
 
 	// initialise a new contract and set the code that is to be used by the
 	// E The contract is a scoped evmironment for this execution context
 	// only.
+	//执行合约？
 	contract := NewContract(caller, AccountRef(contractAddr), value, gas)
 	contract.SetCallCode(&contractAddr, crypto.Keccak256Hash(code), code)
 

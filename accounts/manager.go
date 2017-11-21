@@ -49,6 +49,7 @@ func NewManager(backends ...Backend) *Manager {
 		subs[i] = backend.Subscribe(updates)
 	}
 	// Retrieve the initial list of wallets from the backends and sort by URL
+	//把所有的钱包地址加到一起
 	var wallets []Wallet
 	for _, backend := range backends {
 		wallets = merge(wallets, backend.Wallets()...)

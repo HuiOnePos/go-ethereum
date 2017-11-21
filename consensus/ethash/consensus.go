@@ -178,6 +178,7 @@ func (ethash *Ethash) VerifyUncles(chain consensus.ChainReader, block *types.Blo
 		return errTooManyUncles
 	}
 	// Gather the set of past uncles and ancestors
+	//往上找6个块，进行验证
 	uncles, ancestors := set.New(), make(map[common.Hash]*types.Header)
 
 	number, parent := block.NumberU64()-1, block.ParentHash()
@@ -196,6 +197,8 @@ func (ethash *Ethash) VerifyUncles(chain consensus.ChainReader, block *types.Blo
 	uncles.Add(block.Hash())
 
 	// Verify each of the uncles that it's recent, but not an ancestor
+	//查找向上6个主块的所有叔块，查看这次新增的块所包含的叔块是否已经在上六个主块的叔块中存在过，
+	//如果存在过表明这个叔块重复使用奖励
 	for _, uncle := range block.Uncles() {
 		// Make sure every uncle is rewarded only once
 		hash := uncle.Hash()
@@ -240,15 +243,19 @@ func (ethash *Ethash) verifyHeader(chain consensus.ChainReader, header, parent *
 		return errZeroBlockTime
 	}
 	// Verify the block's difficulty based in it's timestamp and parent's difficulty
+	//根据老块计算新块的计算难度
 	expected := CalcDifficulty(chain.Config(), header.Time.Uint64(), parent)
+	//验证计算难度
 	if expected.Cmp(header.Difficulty) != 0 {
 		return fmt.Errorf("invalid difficulty: have %v, want %v", header.Difficulty, expected)
 	}
 	// Verify that the gas limit is <= 2^63-1
+	//验证gaslimit
 	if header.GasLimit.Cmp(math.MaxBig63) > 0 {
 		return fmt.Errorf("invalid gasLimit: have %v, max %v", header.GasLimit, math.MaxBig63)
 	}
 	// Verify that the gasUsed is <= gasLimit
+	//gasUsed<=gasLimit
 	if header.GasUsed.Cmp(header.GasLimit) > 0 {
 		return fmt.Errorf("invalid gasUsed: have %v, gasLimit %v", header.GasUsed, header.GasLimit)
 	}
@@ -265,10 +272,12 @@ func (ethash *Ethash) verifyHeader(chain consensus.ChainReader, header, parent *
 		return fmt.Errorf("invalid gas limit: have %v, want %v += %v", header.GasLimit, parent.GasLimit, limit)
 	}
 	// Verify that the block number is parent's +1
+	//验证当前块ID是父块ID+1
 	if diff := new(big.Int).Sub(header.Number, parent.Number); diff.Cmp(big.NewInt(1)) != 0 {
 		return consensus.ErrInvalidNumber
 	}
 	// Verify the engine specific seal securing the block
+	//验证此块的印章-签名
 	if seal {
 		if err := ethash.VerifySeal(chain, header); err != nil {
 			return err
@@ -468,6 +477,7 @@ func (ethash *Ethash) VerifySeal(chain consensus.ChainReader, header *types.Head
 		return ethash.shared.VerifySeal(chain, header)
 	}
 	// Sanity check that the block number is below the lookup table size (60M blocks)
+	//限制块的最大为60M
 	number := header.Number.Uint64()
 	if number/epochLength >= uint64(len(cacheSizes)) {
 		// Go < 1.7 cannot calculate new cache/dataset sizes (no fast prime check)

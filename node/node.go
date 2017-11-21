@@ -98,6 +98,7 @@ func New(conf *Config) (*Node, error) {
 	}
 	// Ensure that the AccountManager method works before the node has started.
 	// We rely on this in cmd/geth.
+	//创建账户管理者，用来管理账户信息
 	am, ephemeralKeystore, err := makeAccountManager(conf)
 	if err != nil {
 		return nil, err
@@ -153,6 +154,7 @@ func (n *Node) Start() error {
 	if n.serverConfig.TrustedNodes == nil {
 		n.serverConfig.TrustedNodes = n.config.TrustedNodes()
 	}
+	//node目录 ethereum/geth/nodes
 	if n.serverConfig.NodeDatabase == "" {
 		n.serverConfig.NodeDatabase = n.config.NodeDB()
 	}
@@ -161,6 +163,7 @@ func (n *Node) Start() error {
 
 	// Otherwise copy and specialize the P2P configuration
 	services := make(map[reflect.Type]Service)
+	//其中服务方法 p2pay/cmd/utils.RegisterEthService.func2 || 
 	for _, constructor := range n.serviceFuncs {
 		// Create a new context for the particular service
 		ctx := &ServiceContext{

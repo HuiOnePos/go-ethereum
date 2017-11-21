@@ -140,6 +140,7 @@ func NewBlockChain(chainDb ethdb.Database, config *params.ChainConfig, engine co
 		vmConfig:     vmConfig,
 		badBlocks:    badBlocks,
 	}
+	//设置块验证
 	bc.SetValidator(NewBlockValidator(config, bc, engine))
 	bc.SetProcessor(NewStateProcessor(config, bc, engine))
 
@@ -528,11 +529,13 @@ func (bc *BlockChain) HasBlock(hash common.Hash, number uint64) bool {
 // in the database or not, caching it if present.
 func (bc *BlockChain) HasBlockAndState(hash common.Hash) bool {
 	// Check first that the block itself is known
+	//能不能找到block
 	block := bc.GetBlockByHash(hash)
 	if block == nil {
 		return false
 	}
 	// Ensure the associated state is also present
+	//能不能打开这个block的trie
 	_, err := bc.stateCache.OpenTrie(block.Root())
 	return err == nil
 }
@@ -901,6 +904,7 @@ func (bc *BlockChain) insertChain(chain types.Blocks) (int, []interface{}, []*ty
 		headers[i] = block.Header()
 		seals[i] = true
 	}
+	//验证头
 	abort, results := bc.engine.VerifyHeaders(bc, headers, seals)
 	defer close(abort)
 
@@ -912,6 +916,7 @@ func (bc *BlockChain) insertChain(chain types.Blocks) (int, []interface{}, []*ty
 			break
 		}
 		// If the header is a banned one, straight out abort
+		//头是被禁止的
 		if BadHashes[block.Hash()] {
 			bc.reportBlock(block, nil, ErrBlacklistedHash)
 			return i, events, coalescedLogs, ErrBlacklistedHash

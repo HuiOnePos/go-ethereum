@@ -392,16 +392,16 @@ func (srv *Server) Start() (err error) {
 		srv.ntab = ntab
 	}
 
-	if srv.DiscoveryV5 {
-		ntab, err := discv5.ListenUDP(srv.PrivateKey, srv.DiscoveryV5Addr, srv.NAT, "", srv.NetRestrict) //srv.NodeDatabase)
-		if err != nil {
-			return err
-		}
-		if err := ntab.SetFallbackNodes(srv.BootstrapNodesV5); err != nil {
-			return err
-		}
-		srv.DiscV5 = ntab
-	}
+	// if srv.DiscoveryV5 {
+	// 	ntab, err := discv5.ListenUDP(srv.PrivateKey, srv.DiscoveryV5Addr, srv.NAT, "", srv.NetRestrict) //srv.NodeDatabase)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	if err := ntab.SetFallbackNodes(srv.BootstrapNodesV5); err != nil {
+	// 		return err
+	// 	}
+	// 	srv.DiscV5 = ntab
+	// }
 
 	dynPeers := (srv.MaxPeers + 1) / 2
 	if srv.NoDiscovery {
@@ -644,7 +644,7 @@ func (srv *Server) listenLoop() {
 	// This channel acts as a semaphore limiting
 	// active inbound connections that are lingering pre-handshake.
 	// If all slots are taken, no further connections are accepted.
-	tokens := maxAcceptConns
+	tokens := maxAcceptConns //50
 	if srv.MaxPendingPeers > 0 {
 		tokens = srv.MaxPendingPeers
 	}
@@ -662,6 +662,7 @@ func (srv *Server) listenLoop() {
 			err error
 		)
 		for {
+			//获取conn
 			fd, err = srv.listener.Accept()
 			if tempErr, ok := err.(tempError); ok && tempErr.Temporary() {
 				log.Debug("Temporary read error", "err", err)
@@ -674,6 +675,7 @@ func (srv *Server) listenLoop() {
 		}
 
 		// Reject connections that do not match NetRestrict.
+		//网络约束
 		if srv.NetRestrict != nil {
 			if tcp, ok := fd.RemoteAddr().(*net.TCPAddr); ok && !srv.NetRestrict.Contains(tcp.IP) {
 				log.Debug("Rejected conn (not whitelisted in NetRestrict)", "addr", fd.RemoteAddr())
@@ -682,13 +684,14 @@ func (srv *Server) listenLoop() {
 				continue
 			}
 		}
-
+		//创建统计流量的连接
 		fd = newMeteredConn(fd, true)
 		log.Trace("Accepted connection", "addr", fd.RemoteAddr())
 
 		// Spawn the handler. It will give the slot back when the connection
 		// has been established.
 		go func() {
+			//设置此链接作为接受者的握手验证
 			srv.SetupConn(fd, inboundConn, nil)
 			slots <- struct{}{}
 		}()
@@ -710,6 +713,7 @@ func (srv *Server) SetupConn(fd net.Conn, flags connFlag, dialDest *discover.Nod
 	}
 	// Run the encryption handshake.
 	var err error
+	//创建链接的握手信息，应该是用来发送给别人的。c.doEncHandshake = rlpx.doEncHandshake
 	if c.id, err = c.doEncHandshake(srv.PrivateKey, dialDest); err != nil {
 		log.Trace("Failed RLPx handshake", "addr", c.fd.RemoteAddr(), "conn", c.flags, "err", err)
 		c.close(err)

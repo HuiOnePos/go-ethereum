@@ -83,10 +83,14 @@ type Message interface {
 func IntrinsicGas(data []byte, contractCreation, homestead bool) *big.Int {
 	igas := new(big.Int)
 	if contractCreation && homestead {
+		//账户不存在扣除53000
 		igas.SetUint64(params.TxGasContractCreation)
 	} else {
+		//账户不存在扣除21000
 		igas.SetUint64(params.TxGas)
 	}
+	//计算数据大小消费的gas
+	//空字节4，非空字节68
 	if len(data) > 0 {
 		var nz int64
 		for _, byt := range data {
@@ -170,22 +174,25 @@ func (st *StateTransition) buyGas() error {
 	if mgas.BitLen() > 64 {
 		return vm.ErrOutOfGas
 	}
-
+	//数量*单价
 	mgval := new(big.Int).Mul(mgas, st.gasPrice)
 
 	var (
 		state  = st.state
 		sender = st.from()
 	)
+	//判断账户余额是否足够
 	if state.GetBalance(sender.Address()).Cmp(mgval) < 0 {
 		return errInsufficientBalanceForGas
 	}
+	//往gaspool中添加mgas
 	if err := st.gp.SubGas(mgas); err != nil {
 		return err
 	}
 	st.gas += mgas.Uint64()
 
 	st.initialGas.Set(mgas)
+	//扣除数量
 	state.SubBalance(sender.Address(), mgval)
 	return nil
 }
@@ -195,7 +202,9 @@ func (st *StateTransition) preCheck() error {
 	sender := st.from()
 
 	// Make sure this transaction's nonce is correct
+	//true
 	if msg.CheckNonce() {
+		//从stateCache中获取发送者地址的nonce
 		nonce := st.state.GetNonce(sender.Address())
 		if nonce < msg.Nonce() {
 			return ErrNonceTooHigh
@@ -221,10 +230,12 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 
 	// Pay intrinsic gas
 	// TODO convert to uint64
+	//支付固定费用
 	intrinsicGas := IntrinsicGas(st.data, contractCreation, homestead)
 	if intrinsicGas.BitLen() > 64 {
 		return nil, nil, nil, false, vm.ErrOutOfGas
 	}
+	//花费固定费用
 	if err = st.useGas(intrinsicGas.Uint64()); err != nil {
 		return nil, nil, nil, false, err
 	}
@@ -237,6 +248,7 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 		vmerr error
 	)
 	if contractCreation {
+		//创建地址
 		ret, _, st.gas, vmerr = evm.Create(sender, st.data, st.gas, st.value)
 	} else {
 		// Increment the nonce for the next transaction
@@ -253,8 +265,9 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 		}
 	}
 	requiredGas = new(big.Int).Set(st.gasUsed())
-
+	//把没用的钱返给from
 	st.refundGas()
+	//把用了的钱，给矿工
 	st.state.AddBalance(st.evm.Coinbase, new(big.Int).Mul(st.gasUsed(), st.gasPrice))
 
 	return ret, requiredGas, st.gasUsed(), vmerr != nil, err
@@ -264,10 +277,12 @@ func (st *StateTransition) refundGas() {
 	// Return eth for remaining gas to the sender account,
 	// exchanged at the original rate.
 	sender := st.from() // err already checked
+	//把剩余的钱返还
 	remaining := new(big.Int).Mul(new(big.Int).SetUint64(st.gas), st.gasPrice)
 	st.state.AddBalance(sender.Address(), remaining)
 
 	// Apply refund counter, capped to half of the used gas.
+	//把清理空间退回的钱返回给用户，比如这个用户创建这个空间使用了100gas在清除这个空间时，可以退回50gas，退回不得超过50%
 	uhalf := remaining.Div(st.gasUsed(), common.Big2)
 	refund := math.BigMin(uhalf, st.state.GetRefund())
 	st.gas += refund.Uint64()

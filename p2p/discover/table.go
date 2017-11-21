@@ -102,7 +102,7 @@ func newTable(t transport, ourID NodeID, ourAddr *net.UDPAddr, nodeDBPath string
 		db:         db,
 		self:       NewNode(ourID, ourAddr.IP, uint16(ourAddr.Port), uint16(ourAddr.Port)),
 		bonding:    make(map[NodeID]*bondproc),
-		bondslots:  make(chan struct{}, maxBondingPingPongs),
+		bondslots:  make(chan struct{}, maxBondingPingPongs),//16
 		refreshReq: make(chan chan struct{}),
 		closeReq:   make(chan struct{}),
 		closed:     make(chan struct{}),
@@ -111,6 +111,7 @@ func newTable(t transport, ourID NodeID, ourAddr *net.UDPAddr, nodeDBPath string
 		tab.bondslots <- struct{}{}
 	}
 	for i := range tab.buckets {
+		//64
 		tab.buckets[i] = new(bucket)
 	}
 	go tab.refreshLoop()
@@ -250,6 +251,7 @@ func (tab *Table) lookup(targetID NodeID, refreshIfEmpty bool) []*Node {
 	for {
 		tab.mutex.Lock()
 		// generate initial result set
+		//重置result
 		result = tab.closest(target, bucketSize)
 		tab.mutex.Unlock()
 		if len(result.entries) > 0 || !refreshIfEmpty {
@@ -265,7 +267,7 @@ func (tab *Table) lookup(targetID NodeID, refreshIfEmpty bool) []*Node {
 
 	for {
 		// ask the alpha closest nodes that we haven't asked yet
-		for i := 0; i < len(result.entries) && pendingQueries < alpha; i++ {
+		for i := 0; i < len(result.entries) && pendingQueries < alpha; i++ {//alpha=3
 			n := result.entries[i]
 			if !asked[n.ID] {
 				asked[n.ID] = true
@@ -317,7 +319,7 @@ func (tab *Table) refresh() <-chan struct{} {
 // refreshLoop schedules doRefresh runs and coordinates shutdown.
 func (tab *Table) refreshLoop() {
 	var (
-		timer   = time.NewTicker(autoRefreshInterval)
+		timer   = time.NewTicker(autoRefreshInterval)//1H
 		waiting []chan struct{} // accumulates waiting callers while doRefresh runs
 		done    chan struct{}   // where doRefresh reports completion
 	)
@@ -345,6 +347,7 @@ loop:
 			break loop
 		}
 	}
+	//关闭
 
 	if tab.net != nil {
 		tab.net.close()
@@ -364,7 +367,7 @@ loop:
 // bootstrap or discarded faulty peers).
 func (tab *Table) doRefresh(done chan struct{}) {
 	defer close(done)
-
+	//kademlia的协议规定了桶刷新必须运行一个lookup在最新用过的桶上
 	// The Kademlia paper specifies that the bucket refresh should
 	// perform a lookup in the least recently used bucket. We cannot
 	// adhere to this because the findnode target is a 512bit value

@@ -176,6 +176,7 @@ func (t *rlpx) doEncHandshake(prv *ecdsa.PrivateKey, dial *discover.Node) (disco
 		err error
 	)
 	if dial == nil {
+		//创建接受者的握手
 		sec, err = receiverEncHandshake(t.fd, prv, nil)
 	} else {
 		sec, err = initiatorEncHandshake(t.fd, prv, dial.ID, nil)
@@ -350,20 +351,23 @@ func (h *encHandshake) handleAuthResp(msg *authRespV4) (err error) {
 // token is the token from a previous session with this node.
 func receiverEncHandshake(conn io.ReadWriter, prv *ecdsa.PrivateKey, token []byte) (s secrets, err error) {
 	authMsg := new(authMsgV4)
+	//私钥解密后的数据，利用节点私钥解密
 	authPacket, err := readHandshakeMsg(authMsg, encAuthMsgLen, prv, conn)
 	if err != nil {
 		return s, err
 	}
 	h := new(encHandshake)
+	//获取远程节点的随机publickey
 	if err := h.handleAuthMsg(authMsg, prv); err != nil {
 		return s, err
 	}
-
+	//
 	authRespMsg, err := h.makeAuthResp()
 	if err != nil {
 		return s, err
 	}
 	var authRespPacket []byte
+	//利用远程的公钥进行加密
 	if authMsg.gotPlain {
 		authRespPacket, err = authRespMsg.sealPlain(h)
 	} else {
@@ -386,10 +390,12 @@ func (h *encHandshake) handleAuthMsg(msg *authMsgV4, prv *ecdsa.PrivateKey) erro
 	if err != nil {
 		return fmt.Errorf("bad remoteID: %#v", err)
 	}
+	//数据里面解析出来的public
 	h.remotePub = ecies.ImportECDSAPublic(rpub)
 
 	// Generate random keypair for ECDH.
 	// If a private key is already set, use it instead of generating one (for testing).
+	//生成一个随机私钥
 	if h.randomPrivKey == nil {
 		h.randomPrivKey, err = ecies.GenerateKey(rand.Reader, crypto.S256(), nil)
 		if err != nil {
@@ -398,11 +404,14 @@ func (h *encHandshake) handleAuthMsg(msg *authMsgV4, prv *ecdsa.PrivateKey) erro
 	}
 
 	// Check the signature.
+	//利用节点私钥生成一个16位长的token
 	token, err := h.staticSharedSecret(prv)
 	if err != nil {
 		return err
 	}
+	//把16位的token和数据的initNonce异或
 	signedMsg := xor(token, h.initNonce)
+	//利用异或的值和数据里面的sign 参数获取到远程的publickey
 	remoteRandomPub, err := secp256k1.RecoverPubkey(signedMsg, msg.Signature[:])
 	if err != nil {
 		return err
@@ -413,6 +422,7 @@ func (h *encHandshake) handleAuthMsg(msg *authMsgV4, prv *ecdsa.PrivateKey) erro
 
 func (h *encHandshake) makeAuthResp() (msg *authRespV4, err error) {
 	// Generate random nonce.
+	//生成随机nonce
 	h.respNonce = make([]byte, shaLen)
 	if _, err = rand.Read(h.respNonce); err != nil {
 		return nil, err
@@ -420,6 +430,7 @@ func (h *encHandshake) makeAuthResp() (msg *authRespV4, err error) {
 
 	msg = new(authRespV4)
 	copy(msg.Nonce[:], h.respNonce)
+	//把本地随机生成的私钥的公钥赋值
 	copy(msg.RandomPubkey[:], exportPubkey(&h.randomPrivKey.PublicKey))
 	msg.Version = 4
 	return msg, nil
@@ -486,6 +497,7 @@ func readHandshakeMsg(msg plainDecoder, plainSize int, prv *ecdsa.PrivateKey, r 
 	}
 	// Attempt decoding pre-EIP-8 "plain" format.
 	key := ecies.ImportECDSA(prv)
+	//利用私钥解密
 	if dec, err := key.Decrypt(rand.Reader, buf, nil, nil); err == nil {
 		msg.decodePlain(dec)
 		return buf, nil

@@ -239,6 +239,7 @@ func (ac *accountCache) close() {
 
 // scanFiles performs a new scan on the given directory, compares against the already
 // cached filenames, and returns file sets: new, missing , modified
+//获取key文件的增删改
 func (fc *fileCache) scanFiles(keyDir string) (set.Interface, set.Interface, set.Interface, error) {
 	t0 := time.Now()
 	files, err := ioutil.ReadDir(keyDir)
@@ -288,6 +289,7 @@ func (fc *fileCache) scanFiles(keyDir string) (set.Interface, set.Interface, set
 // scanAccounts checks if any changes have occurred on the filesystem, and
 // updates the account cache accordingly
 func (ac *accountCache) scanAccounts() error {
+	//获取key文件的增删改的列表
 	newFiles, missingFiles, modified, err := ac.fileC.scanFiles(ac.keydir)
 	t1 := time.Now()
 	if err != nil {
@@ -322,7 +324,7 @@ func (ac *accountCache) scanAccounts() error {
 		}
 		return nil
 	}
-
+	//新增key文件
 	for _, p := range newFiles.List() {
 		path, _ := p.(string)
 		a := readAccount(path)
