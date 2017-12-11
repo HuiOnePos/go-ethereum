@@ -106,6 +106,7 @@ type worker struct {
 
 	agents map[Agent]struct{}
 	recv   chan *Result
+	stopCh chan struct{}
 
 	eth     Backend
 	chain   *core.BlockChain
@@ -139,6 +140,7 @@ func newWorker(config *params.ChainConfig, engine consensus.Engine, coinbase com
 		chainSideCh:    make(chan core.ChainSideEvent, chainSideChanSize),
 		chainDb:        eth.ChainDb(),
 		recv:           make(chan *Result, resultQueueSize),
+		stopCh:         make(chan struct{}, 1),
 		chain:          eth.BlockChain(),
 		proc:           eth.BlockChain().Validator(),
 		possibleUncles: make(map[common.Hash]*types.Block),
@@ -214,6 +216,7 @@ func (self *worker) start() {
 }
 
 func (self *worker) stop() {
+	self.stopCh <- struct{}{}
 	self.wg.Wait()
 
 	self.mu.Lock()
@@ -454,6 +457,24 @@ func (self *worker) commitNewWork() {
 	if err != nil {
 		log.Error("Failed to fetch pending transactions", "err", err)
 		return
+	}
+	if len(pending) == 0 && atomic.LoadInt32(&self.mining) == 1 {
+		for {
+			select {
+			case <-self.stopCh:
+				return
+			case <-time.After(1 * time.Second):
+			}
+			pending, err = self.eth.TxPool().Pending()
+			if err != nil {
+				log.Error("Failed to fetch pending transactions", "err", err)
+				return
+			}
+			fmt.Println("txs count:", len(pending))
+			if len(pending) > 0 {
+				break
+			}
+		}
 	}
 	txs := types.NewTransactionsByPriceAndNonce(self.current.signer, pending)
 	work.commitTransactions(self.mux, txs, self.chain, self.coinbase)

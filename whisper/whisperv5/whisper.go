@@ -100,6 +100,10 @@ func New(cfg *Config) *Whisper {
 
 	whisper.filters = NewFilters(whisper)
 
+	//regiest fileter
+	/*whisper.Subscribe(&Filter{
+	})*/
+
 	whisper.settings.Store(minPowIdx, cfg.MinimumAcceptedPOW)
 	whisper.settings.Store(maxMsgSizeIdx, cfg.MaxMessageSize)
 	whisper.settings.Store(overflowIdx, false)
@@ -416,6 +420,7 @@ func (w *Whisper) GetSymKey(id string) ([]byte, error) {
 // Subscribe installs a new message handler used for filtering, decrypting
 // and subsequent storing of incoming messages.
 func (w *Whisper) Subscribe(f *Filter) (string, error) {
+	fmt.Printf("whisper subscribe filter:%+v\n", f)
 	return w.filters.Install(f)
 }
 

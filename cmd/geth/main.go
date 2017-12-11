@@ -64,7 +64,7 @@ import (
 	"p2pay/params"
 	"p2pay/rpc"
 	"p2pay/trie"
-	/*whisper "p2pay/whisper/whisperv5"*/
+	whisper "p2pay/whisper/whisperv5"
 
 	"github.com/gizak/termui"
 	"github.com/naoina/toml"
@@ -163,11 +163,11 @@ var (
 		utils.IPCPathFlag,
 	}
 
-	/*whisperFlags = []cli.Flag{
+	whisperFlags = []cli.Flag{
 		utils.WhisperEnabledFlag,
 		utils.WhisperMaxMessageSizeFlag,
 		utils.WhisperMinPOWFlag,
-	}*/
+	}
 )
 
 func init() {
@@ -207,7 +207,7 @@ func init() {
 	app.Flags = append(app.Flags, rpcFlags...)
 	app.Flags = append(app.Flags, consoleFlags...)
 	app.Flags = append(app.Flags, debug.Flags...)
-	/*app.Flags = append(app.Flags, whisperFlags...)*/
+	app.Flags = append(app.Flags, whisperFlags...)
 
 	app.Before = func(ctx *cli.Context) error {
 		runtime.GOMAXPROCS(runtime.NumCPU())
@@ -1096,12 +1096,11 @@ func hashish(x string) bool {
 
 var (
 	dumpConfigCommand = cli.Command{
-		Action:    utils.MigrateFlags(dumpConfig),
-		Name:      "dumpconfig",
-		Usage:     "Show configuration values",
-		ArgsUsage: "",
-		/*Flags:       append(append(nodeFlags, rpcFlags...), whisperFlags...),*/
-		Flags:       append(nodeFlags, rpcFlags...),
+		Action:      utils.MigrateFlags(dumpConfig),
+		Name:        "dumpconfig",
+		Usage:       "Show configuration values",
+		ArgsUsage:   "",
+		Flags:       append(append(nodeFlags, rpcFlags...), whisperFlags...),
 		Category:    "MISCELLANEOUS COMMANDS",
 		Description: `The dumpconfig command shows configuration values.`,
 	}
@@ -1134,8 +1133,8 @@ type ethstatsConfig struct {
 }
 
 type gethConfig struct {
-	Eth eth.Config
-	/*Shh      whisper.Config*/
+	Eth      eth.Config
+	Shh      whisper.Config
 	Node     node.Config
 	Ethstats ethstatsConfig
 }
@@ -1168,8 +1167,8 @@ func defaultNodeConfig() node.Config {
 func makeConfigNode(ctx *cli.Context) (*node.Node, gethConfig) {
 	// Load defaults.
 	cfg := gethConfig{
-		Eth: eth.DefaultConfig,
-		/*Shh:  whisper.DefaultConfig,*/
+		Eth:  eth.DefaultConfig,
+		Shh:  whisper.DefaultConfig,
 		Node: defaultNodeConfig(),
 	}
 
@@ -1191,13 +1190,13 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, gethConfig) {
 		cfg.Ethstats.URL = ctx.GlobalString(utils.EthStatsURLFlag.Name)
 	}
 
-	/*utils.SetShhConfig(ctx, stack, &cfg.Shh)*/
+	utils.SetShhConfig(ctx, stack, &cfg.Shh)
 
 	return stack, cfg
 }
 
 // enableWhisper returns true in case one of the whisper flags is set.
-/*func enableWhisper(ctx *cli.Context) bool {
+func enableWhisper(ctx *cli.Context) bool {
 	for _, flag := range whisperFlags {
 		if ctx.GlobalIsSet(flag.GetName()) {
 			return true
@@ -1205,14 +1204,14 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, gethConfig) {
 	}
 	return false
 }
-*/
+
 //生成一个完整节点
 func makeFullNode(ctx *cli.Context) *node.Node {
 	stack, cfg := makeConfigNode(ctx)
 	//注册eth服务
 	utils.RegisterEthService(stack, &cfg.Eth)
 
-	/*// Whisper must be explicitly enabled by specifying at least 1 whisper flag or in dev mode
+	// Whisper must be explicitly enabled by specifying at least 1 whisper flag or in dev mode
 	shhEnabled := enableWhisper(ctx)
 	shhAutoEnabled := !ctx.GlobalIsSet(utils.WhisperEnabledFlag.Name) && ctx.GlobalIsSet(utils.DeveloperFlag.Name)
 	if shhEnabled || shhAutoEnabled {
@@ -1223,7 +1222,7 @@ func makeFullNode(ctx *cli.Context) *node.Node {
 			cfg.Shh.MinimumAcceptedPOW = ctx.Float64(utils.WhisperMinPOWFlag.Name)
 		}
 		utils.RegisterShhService(stack, &cfg.Shh)
-	}*/
+	}
 
 	// Add the Ethereum Stats daemon if requested.
 	if cfg.Ethstats.URL != "" {

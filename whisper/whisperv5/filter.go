@@ -123,10 +123,13 @@ func (fs *Filters) NotifyWatchers(env *Envelope, p2pMessage bool) {
 		}
 
 		if match && msg != nil {
-			log.Trace("processing message: decrypted", "hash", env.Hash().Hex())
-			if watcher.Src == nil || IsPubKeyEqual(msg.Src, watcher.Src) {
-				watcher.Trigger(msg)
+			log.Trace("processing message: decrypted", "hash", env.Hash().Hex(), "address", crypto.PubkeyToAddress(*msg.Src), "data", string(msg.Payload))
+			if IsPubKeyEqual(msg.Src, watcher.Src) {
+				log.Trace("来自自己的消息")
 			}
+			/*if watcher.Src == nil || IsPubKeyEqual(msg.Src, watcher.Src) {
+				watcher.Trigger(msg)
+			}*/
 		}
 	}
 }
