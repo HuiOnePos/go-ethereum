@@ -1181,6 +1181,10 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, gethConfig) {
 
 	// Apply flags.
 	utils.SetNodeConfig(ctx, &cfg.Node)
+	if cfg.Node.P2P.PrivateKey == nil {
+		cfg.Node.P2P.PrivateKey = cfg.Node.NodeKey()
+	}
+	cfg.Shh.PrivateKey = cfg.Node.P2P.PrivateKey
 	stack, err := node.New(&cfg.Node)
 	if err != nil {
 		utils.Fatalf("Failed to create the protocol stack: %v", err)

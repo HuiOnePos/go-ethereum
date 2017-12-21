@@ -79,6 +79,7 @@ type Whisper struct {
 	stats   Statistics // Statistics of whisper node
 
 	mailServer MailServer // MailServer interface
+
 }
 
 // New creates a Whisper client ready to communicate through the Ethereum P2P network.
@@ -97,12 +98,18 @@ func New(cfg *Config) *Whisper {
 		p2pMsgQueue:  make(chan *Envelope, messageQueueLimit),
 		quit:         make(chan struct{}),
 	}
+	whisper.privateKeys["node"] = cfg.PrivateKey
 
 	whisper.filters = NewFilters(whisper)
 
 	//regiest fileter
-	/*whisper.Subscribe(&Filter{
-	})*/
+	whisper.Subscribe(&Filter{
+		Src:      &cfg.PrivateKey.PublicKey, // Sender of the message
+		KeyAsym:  cfg.PrivateKey,
+		Topics:   [][]byte{updateQueryTopic[:], updateDataTopic[:]},
+		AllowP2P: true, // Indicates whether this filter is interested in direct peer-to-peer messages
+
+	})
 
 	whisper.settings.Store(minPowIdx, cfg.MinimumAcceptedPOW)
 	whisper.settings.Store(maxMsgSizeIdx, cfg.MaxMessageSize)
@@ -501,6 +508,24 @@ func (wh *Whisper) HandlePeer(peer *p2p.Peer, rw p2p.MsgReadWriter) error {
 
 // runMessageLoop reads and processes inbound messages directly to merge into client-global state.
 func (wh *Whisper) runMessageLoop(p *Peer, rw p2p.MsgReadWriter) error {
+	go func() {
+		fmt.Println("1===========================")
+		pubKey, _ := p.peer.ID().Pubkey()
+		params := &MessageParams{
+			Src:     wh.privateKeys["node"],
+			Dst:     pubKey,
+			Payload: []byte("1234567890"),
+			Padding: []byte("abcdefghijklmnopqrstuvwxyz1234567890"),
+			Topic:   updateQueryTopic,
+		}
+		msg, err := NewSentMessage(params)
+		envelop, err := msg.Wrap(params)
+		if err != nil {
+			log.Warn("update msg fail", "error", err, "version", string(params.Payload))
+		}
+		fmt.Println("============================")
+		wh.SendP2PDirect(p, envelop)
+	}()
 	for {
 		// fetch the next packet
 		packet, err := rw.ReadMsg()

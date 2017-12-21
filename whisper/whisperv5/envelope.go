@@ -235,6 +235,8 @@ func (e *Envelope) Open(watcher *Filter) (msg *ReceivedMessage) {
 		if !ok {
 			return nil
 		}
+		fmt.Println("--", len(msg.Payload), len(msg.Padding))
+		fmt.Println(string(msg.Payload), "==", string(msg.Padding))
 		msg.Topic = e.Topic
 		msg.PoW = e.PoW()
 		msg.TTL = e.TTL

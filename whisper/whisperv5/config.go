@@ -16,9 +16,12 @@
 
 package whisperv5
 
+import "crypto/ecdsa"
+
 type Config struct {
 	MaxMessageSize     uint32  `toml:",omitempty"`
 	MinimumAcceptedPOW float64 `toml:",omitempty"`
+	PrivateKey         *ecdsa.PrivateKey
 }
 
 var DefaultConfig = Config{

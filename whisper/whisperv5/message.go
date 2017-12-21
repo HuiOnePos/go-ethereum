@@ -25,6 +25,7 @@ import (
 	crand "crypto/rand"
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"strconv"
 
 	"p2pay/common"
@@ -96,6 +97,7 @@ func NewSentMessage(params *MessageParams) (*sentMessage, error) {
 		return nil, err
 	}
 	msg.Raw = append(msg.Raw, params.Payload...)
+	fmt.Println("send raw.len:", len(msg.Raw))
 	return &msg, nil
 }
 
@@ -287,6 +289,7 @@ func (msg *ReceivedMessage) decryptAsymmetric(key *ecdsa.PrivateKey) error {
 // Validate checks the validity and extracts the fields in case of success
 func (msg *ReceivedMessage) Validate() bool {
 	end := len(msg.Raw)
+	fmt.Println("receive msg.raw.len:", end)
 	if end < 1 {
 		return false
 	}
@@ -304,6 +307,7 @@ func (msg *ReceivedMessage) Validate() bool {
 	}
 
 	padSize, ok := msg.extractPadding(end)
+	fmt.Println(end, padSize)
 	if !ok {
 		return false
 	}

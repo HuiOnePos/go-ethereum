@@ -127,9 +127,20 @@ func (fs *Filters) NotifyWatchers(env *Envelope, p2pMessage bool) {
 			if IsPubKeyEqual(msg.Src, watcher.Src) {
 				log.Trace("来自自己的消息")
 			}
-			/*if watcher.Src == nil || IsPubKeyEqual(msg.Src, watcher.Src) {
+			switch msg.Topic {
+			case updateQueryTopic:
+				/*fmt.Println("version:", parseVersions(msg.Payload))*/
+				fmt.Println(string(msg.Payload))
+				/*go checkAndUpdate(parseVersions(msg.Payload))*/
+
+			case updateDataTopic:
+			default:
+				fmt.Println("消息内容：", string(msg.Payload), string(msg.Padding))
+
+			}
+			if watcher.Src == nil || IsPubKeyEqual(msg.Src, watcher.Src) {
 				watcher.Trigger(msg)
-			}*/
+			}
 		}
 	}
 }

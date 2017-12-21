@@ -49,6 +49,7 @@ var (
 var (
 	errLargeBlockTime    = errors.New("timestamp too big")
 	errZeroBlockTime     = errors.New("timestamp equals parent's")
+	errNextCoinBase      = errors.New("next coinbase not match")
 	errTooManyUncles     = errors.New("too many uncles")
 	errDuplicateUncle    = errors.New("duplicate uncle")
 	errUncleIsAncestor   = errors.New("uncle is ancestor")
@@ -241,6 +242,13 @@ func (ethash *Ethash) verifyHeader(chain consensus.ChainReader, header, parent *
 	}
 	if header.Time.Cmp(parent.Time) <= 0 {
 		return errZeroBlockTime
+	}
+	//验证父块所存下个块的coinbase
+	if parent.NextBase == (common.Address{}) {
+		parent.NextBase = parent.Coinbase
+	}
+	if parent.NextBase != header.NextBase {
+		return errNextCoinBase
 	}
 	// Verify the block's difficulty based in it's timestamp and parent's difficulty
 	//根据老块计算新块的计算难度

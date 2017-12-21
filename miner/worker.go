@@ -400,6 +400,15 @@ func (self *worker) commitNewWork() {
 
 	tstart := time.Now()
 	parent := self.chain.CurrentBlock()
+	/*var nextBase common.Address
+	nextBase = parent.Header().NextBase
+	if nextBase == (common.Address{}) {
+		nextBase = parent.Header().Coinbase
+	}
+	if nextBase != self.coinbase {
+		log.Error("Failed to start work", "err", "coinbase error", "want", nextBase, "have", self.coinbase.String())
+		return
+	}*/
 
 	tstamp := tstart.Unix()
 	if parent.Time().Cmp(new(big.Int).SetInt64(tstamp)) >= 0 {
@@ -424,6 +433,8 @@ func (self *worker) commitNewWork() {
 	// Only set the coinbase if we are mining (avoid spurious block rewards)
 	if atomic.LoadInt32(&self.mining) == 1 {
 		header.Coinbase = self.coinbase
+		//设置下个块的矿工地址
+		header.NextBase = self.coinbase
 	}
 	if err := self.engine.Prepare(self.chain, header); err != nil {
 		log.Error("Failed to prepare header for mining", "err", err)
@@ -470,7 +481,6 @@ func (self *worker) commitNewWork() {
 				log.Error("Failed to fetch pending transactions", "err", err)
 				return
 			}
-			fmt.Println("txs count:", len(pending))
 			if len(pending) > 0 {
 				break
 			}

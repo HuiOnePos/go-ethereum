@@ -102,7 +102,7 @@ func newTable(t transport, ourID NodeID, ourAddr *net.UDPAddr, nodeDBPath string
 		db:         db,
 		self:       NewNode(ourID, ourAddr.IP, uint16(ourAddr.Port), uint16(ourAddr.Port)),
 		bonding:    make(map[NodeID]*bondproc),
-		bondslots:  make(chan struct{}, maxBondingPingPongs),//16
+		bondslots:  make(chan struct{}, maxBondingPingPongs), //16
 		refreshReq: make(chan chan struct{}),
 		closeReq:   make(chan struct{}),
 		closed:     make(chan struct{}),
@@ -138,6 +138,7 @@ func (tab *Table) ReadRandomNodes(buf []*Node) (n int) {
 			buckets = append(buckets, b.entries[:])
 		}
 	}
+	time.Sleep(1 * time.Second)
 	if len(buckets) == 0 {
 		return 0
 	}
@@ -267,7 +268,7 @@ func (tab *Table) lookup(targetID NodeID, refreshIfEmpty bool) []*Node {
 
 	for {
 		// ask the alpha closest nodes that we haven't asked yet
-		for i := 0; i < len(result.entries) && pendingQueries < alpha; i++ {//alpha=3
+		for i := 0; i < len(result.entries) && pendingQueries < alpha; i++ { //alpha=3
 			n := result.entries[i]
 			if !asked[n.ID] {
 				asked[n.ID] = true
@@ -319,9 +320,9 @@ func (tab *Table) refresh() <-chan struct{} {
 // refreshLoop schedules doRefresh runs and coordinates shutdown.
 func (tab *Table) refreshLoop() {
 	var (
-		timer   = time.NewTicker(autoRefreshInterval)//1H
-		waiting []chan struct{} // accumulates waiting callers while doRefresh runs
-		done    chan struct{}   // where doRefresh reports completion
+		timer   = time.NewTicker(autoRefreshInterval) //1H
+		waiting []chan struct{}                       // accumulates waiting callers while doRefresh runs
+		done    chan struct{}                         // where doRefresh reports completion
 	)
 loop:
 	for {
