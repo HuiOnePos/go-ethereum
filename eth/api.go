@@ -103,7 +103,7 @@ func (api *PublicMinerAPI) SubmitWork(nonce types.BlockNonce, solution, digest c
 // result[2], 32 bytes hex encoded boundary condition ("target"), 2^256/difficulty
 func (api *PublicMinerAPI) GetWork() ([3]string, error) {
 	if !api.e.IsMining() {
-		if err := api.e.StartMining(false); err != nil {
+		if err := api.e.StartMining(); err != nil {
 			return [3]string{}, err
 		}
 	}
@@ -159,7 +159,7 @@ func (api *PrivateMinerAPI) Start(threads *int) error {
 		api.e.lock.RUnlock()
 
 		api.e.txPool.SetGasPrice(price)
-		return api.e.StartMining(true)
+		return api.e.StartMining()
 	}
 	return nil
 }
@@ -195,9 +195,8 @@ func (api *PrivateMinerAPI) SetGasPrice(gasPrice hexutil.Big) bool {
 }
 
 // SetEtherbase sets the etherbase of the miner
-func (api *PrivateMinerAPI) SetEtherbase(etherbase common.Address) bool {
-	api.e.SetEtherbase(etherbase)
-	return true
+func (api *PrivateMinerAPI) SetEtherbase(etherbase common.Address, pwd string) error {
+	return api.e.SetEtherbase(etherbase, pwd)
 }
 
 // GetHashrate returns the current hashrate of the miner.

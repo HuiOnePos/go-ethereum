@@ -23,7 +23,6 @@ import (
 	"strings"
 	"time"
 
-	"p2pay/accounts/usbwallet"
 	"p2pay/log"
 	"p2pay/rpc"
 
@@ -104,10 +103,6 @@ func (b *bridge) OpenWallet(call otto.FunctionCall) (response otto.Value) {
 	val, err := call.Otto.Call("jeth.openWallet", nil, wallet, passwd)
 	if err == nil {
 		return val
-	}
-	// Wallet open failed, report error unless it's a PIN entry
-	if !strings.HasSuffix(err.Error(), usbwallet.ErrTrezorPINNeeded.Error()) {
-		throwJSException(err.Error())
 	}
 	// Trezor PIN matrix input requested, display the matrix to the user and fetch the data
 	fmt.Fprintf(b.printer, "Look at the device for number positions\n\n")

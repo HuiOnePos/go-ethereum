@@ -22,6 +22,7 @@ import (
 	"sync/atomic"
 
 	"p2pay/accounts"
+	"p2pay/accounts/keystore"
 	"p2pay/common"
 	"p2pay/consensus"
 	"p2pay/core"
@@ -48,7 +49,7 @@ type Miner struct {
 
 	worker *worker
 
-	coinbase common.Address
+	coinbase *keystore.Key
 	mining   int32
 	eth      Backend
 	engine   consensus.Engine
@@ -62,7 +63,8 @@ func New(eth Backend, config *params.ChainConfig, mux *event.TypeMux, engine con
 		eth:      eth,
 		mux:      mux,
 		engine:   engine,
-		worker:   newWorker(config, engine, common.Address{}, eth, mux),
+		worker:   newWorker(config, engine, &keystore.Key{}, eth, mux),
+		coinbase: &keystore.Key{},
 		canStart: 1,
 	}
 	miner.Register(NewCpuAgent(eth.BlockChain(), engine))
@@ -93,7 +95,7 @@ out:
 			atomic.StoreInt32(&self.canStart, 1)
 			atomic.StoreInt32(&self.shouldStart, 0)
 			if shouldStart {
-				self.Start(self.coinbase)
+				self.Start()
 			}
 			// unsubscribe. we're only interested in this event once
 			events.Unsubscribe()
@@ -103,10 +105,14 @@ out:
 	}
 }
 
-func (self *Miner) Start(coinbase common.Address) {
+func (self *Miner) Start() {
 	atomic.StoreInt32(&self.shouldStart, 1)
-	self.worker.setEtherbase(coinbase)
-	self.coinbase = coinbase
+
+	/*self.SetEtherbase(addr, pwd)*/
+	if self.coinbase.Address == (common.Address{}) {
+		log.Warn("Not found coinbase")
+		return
+	}
 
 	if atomic.LoadInt32(&self.canStart) == 0 {
 		log.Info("Network syncing, will start miner afterwards")
@@ -167,6 +173,9 @@ func (self *Miner) SetExtra(extra []byte) error {
 func (self *Miner) Pending() (*types.Block, *state.StateDB) {
 	return self.worker.pending()
 }
+func (self *Miner) SetNextBase(addr common.Address) {
+	self.worker.nextbase = addr
+}
 
 // PendingBlock returns the currently pending block.
 //
@@ -177,7 +186,20 @@ func (self *Miner) PendingBlock() *types.Block {
 	return self.worker.pendingBlock()
 }
 
-func (self *Miner) SetEtherbase(addr common.Address) {
-	self.coinbase = addr
-	self.worker.setEtherbase(addr)
+func (self *Miner) SetEtherbase(addr common.Address, pwd string) error {
+	if self.coinbase.Address == addr {
+		return nil
+	}
+	account := accounts.Account{Address: addr}
+	wallet, err := self.eth.AccountManager().Find(account)
+	if err != nil {
+		return fmt.Errorf("Not found account : %v", addr.String())
+	}
+	key, err := wallet.DecryptedKey(account, pwd)
+	if err != nil {
+		return fmt.Errorf("Account pwd error. Account: %v", addr.String())
+	}
+	self.coinbase = &keystore.Key{PrivateKey: key, Address: addr}
+	self.worker.setEtherbase(self.coinbase)
+	return nil
 }

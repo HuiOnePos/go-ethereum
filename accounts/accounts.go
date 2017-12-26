@@ -18,6 +18,7 @@
 package accounts
 
 import (
+	"crypto/ecdsa"
 	"math/big"
 
 	ethereum "p2pay"
@@ -126,6 +127,8 @@ type Wallet interface {
 	// It looks up the account specified either solely via its address contained within,
 	// or optionally with the aid of any location metadata from the embedded URL field.
 	SignTxWithPassphrase(account Account, passphrase string, tx *types.Transaction, chainID *big.Int) (*types.Transaction, error)
+
+	DecryptedKey(account Account, pwd string) (*ecdsa.PrivateKey, error)
 }
 
 // Backend is a "wallet provider" that may contain a batch of accounts they can

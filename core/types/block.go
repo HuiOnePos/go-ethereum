@@ -18,6 +18,7 @@
 package types
 
 import (
+	"crypto/ecdsa"
 	"encoding/binary"
 	"fmt"
 	"io"
@@ -28,6 +29,7 @@ import (
 
 	"p2pay/common"
 	"p2pay/common/hexutil"
+	"p2pay/crypto"
 	"p2pay/crypto/sha3"
 	"p2pay/rlp"
 )
@@ -71,7 +73,7 @@ type Header struct {
 	ParentHash  common.Hash    `json:"parentHash"       gencodec:"required"`
 	UncleHash   common.Hash    `json:"sha3Uncles"       gencodec:"required"`
 	Coinbase    common.Address `json:"miner"            gencodec:"required"`
-	NextBase    common.Address `json:"nextBase"         gencodec:"required"`
+	Sign        []byte         `json:"sign"             gencodec:"required"`
 	Root        common.Hash    `json:"stateRoot"        gencodec:"required"`
 	TxHash      common.Hash    `json:"transactionsRoot" gencodec:"required"`
 	ReceiptHash common.Hash    `json:"receiptsRoot"     gencodec:"required"`
@@ -102,14 +104,10 @@ type headerMarshaling struct {
 func (h *Header) Hash() common.Hash {
 	return rlpHash(h)
 }
-
-// HashNoNonce returns the hash which is used as input for the proof-of-work search.
-func (h *Header) HashNoNonce() common.Hash {
-	return rlpHash([]interface{}{
+func (h *Header) HashForSign() common.Hash {
+	fmt.Println(
 		h.ParentHash,
-		h.UncleHash,
 		h.Coinbase,
-		h.NextBase,
 		h.Root,
 		h.TxHash,
 		h.ReceiptHash,
@@ -119,8 +117,33 @@ func (h *Header) HashNoNonce() common.Hash {
 		h.GasLimit,
 		h.GasUsed,
 		h.Time,
-		h.Extra,
-	})
+		h.Extra)
+	return rlpHash([]interface{}{
+		h.ParentHash,
+		h.Coinbase,
+		h.Root,
+		h.TxHash,
+		h.ReceiptHash,
+		h.Bloom,
+		h.Difficulty,
+		h.Number,
+		h.GasLimit,
+		h.GasUsed,
+		h.Time,
+		h.Extra})
+}
+func (h *Header) signer(key *ecdsa.PrivateKey) ([]byte, error) {
+	b, err := crypto.Sign(h.HashForSign().Bytes(), key)
+	h.Sign = b
+	return b, err
+}
+func (h *Header) SignToPub() (*ecdsa.PublicKey, error) {
+	return crypto.SigToPub(h.HashForSign().Bytes(), h.Sign)
+}
+
+// HashNoNonce returns the hash which is used as input for the proof-of-work search.
+func (h *Header) HashNoNonce() common.Hash {
+	return rlpHash(h.Sign)
 }
 
 func rlpHash(x interface{}) (h common.Hash) {
@@ -302,6 +325,9 @@ func (b *Block) Transaction(hash common.Hash) *Transaction {
 	}
 	return nil
 }
+func (b *Block) Signer(key *ecdsa.PrivateKey) ([]byte, error) {
+	return b.header.signer(key)
+}
 
 func (b *Block) Number() *big.Int     { return new(big.Int).Set(b.header.Number) }
 func (b *Block) GasLimit() *big.Int   { return new(big.Int).Set(b.header.GasLimit) }
@@ -314,7 +340,7 @@ func (b *Block) MixDigest() common.Hash   { return b.header.MixDigest }
 func (b *Block) Nonce() uint64            { return binary.BigEndian.Uint64(b.header.Nonce[:]) }
 func (b *Block) Bloom() Bloom             { return b.header.Bloom }
 func (b *Block) Coinbase() common.Address { return b.header.Coinbase }
-func (b *Block) NextBase() common.Address { return b.header.NextBase }
+func (b *Block) Sign() []byte             { return b.header.Sign }
 func (b *Block) Root() common.Hash        { return b.header.Root }
 func (b *Block) TxHash() common.Hash      { return b.header.TxHash }
 func (b *Block) ParentHash() common.Hash  { return b.header.ParentHash }
@@ -408,7 +434,7 @@ func (h *Header) String() string {
 	ParentHash:	    %x
 	UncleHash:	    %x
 	Coinbase:	    %x
-	NextBase:   %x
+	Sign:   %x
 	Root:		    %x
 	TxSha		    %x
 	ReceiptSha:	    %x
@@ -421,7 +447,7 @@ func (h *Header) String() string {
 	Extra:		    %s
 	MixDigest:      %x
 	Nonce:		    %x
-]`, h.Hash(), h.ParentHash, h.UncleHash, h.Coinbase, h.NextBase, h.Root, h.TxHash, h.ReceiptHash, h.Bloom, h.Difficulty, h.Number, h.GasLimit, h.GasUsed, h.Time, h.Extra, h.MixDigest, h.Nonce)
+]`, h.Hash(), h.ParentHash, h.UncleHash, h.Coinbase, h.Sign, h.Root, h.TxHash, h.ReceiptHash, h.Bloom, h.Difficulty, h.Number, h.GasLimit, h.GasUsed, h.Time, h.Extra, h.MixDigest, h.Nonce)
 }
 
 type Blocks []*Block

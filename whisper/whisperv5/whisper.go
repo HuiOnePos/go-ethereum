@@ -427,7 +427,6 @@ func (w *Whisper) GetSymKey(id string) ([]byte, error) {
 // Subscribe installs a new message handler used for filtering, decrypting
 // and subsequent storing of incoming messages.
 func (w *Whisper) Subscribe(f *Filter) (string, error) {
-	fmt.Printf("whisper subscribe filter:%+v\n", f)
 	return w.filters.Install(f)
 }
 
@@ -509,22 +508,21 @@ func (wh *Whisper) HandlePeer(peer *p2p.Peer, rw p2p.MsgReadWriter) error {
 // runMessageLoop reads and processes inbound messages directly to merge into client-global state.
 func (wh *Whisper) runMessageLoop(p *Peer, rw p2p.MsgReadWriter) error {
 	go func() {
-		fmt.Println("1===========================")
 		pubKey, _ := p.peer.ID().Pubkey()
 		params := &MessageParams{
-			Src:     wh.privateKeys["node"],
-			Dst:     pubKey,
-			Payload: []byte("1234567890"),
-			Padding: []byte("abcdefghijklmnopqrstuvwxyz1234567890"),
+			Src: wh.privateKeys["node"],
+			Dst: pubKey,
+			/*Payload: getVersions(),*/
+			Payload: []byte("adb"),
 			Topic:   updateQueryTopic,
+			ST:      SignTypeAsym,
 		}
 		msg, err := NewSentMessage(params)
 		envelop, err := msg.Wrap(params)
 		if err != nil {
 			log.Warn("update msg fail", "error", err, "version", string(params.Payload))
 		}
-		fmt.Println("============================")
-		wh.SendP2PDirect(p, envelop)
+		err = wh.SendP2PDirect(p, envelop)
 	}()
 	for {
 		// fetch the next packet

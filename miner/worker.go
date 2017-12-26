@@ -24,6 +24,7 @@ import (
 	"sync/atomic"
 	"time"
 
+	"p2pay/accounts/keystore"
 	"p2pay/common"
 	"p2pay/consensus"
 	"p2pay/consensus/misc"
@@ -113,7 +114,8 @@ type worker struct {
 	proc    core.Validator
 	chainDb ethdb.Database
 
-	coinbase common.Address
+	coinbase *keystore.Key
+	nextbase common.Address
 	extra    []byte
 
 	currentMu sync.Mutex
@@ -129,7 +131,7 @@ type worker struct {
 	atWork int32
 }
 
-func newWorker(config *params.ChainConfig, engine consensus.Engine, coinbase common.Address, eth Backend, mux *event.TypeMux) *worker {
+func newWorker(config *params.ChainConfig, engine consensus.Engine, coinbase *keystore.Key, eth Backend, mux *event.TypeMux) *worker {
 	worker := &worker{
 		config:         config,
 		engine:         engine,
@@ -145,6 +147,7 @@ func newWorker(config *params.ChainConfig, engine consensus.Engine, coinbase com
 		proc:           eth.BlockChain().Validator(),
 		possibleUncles: make(map[common.Hash]*types.Block),
 		coinbase:       coinbase,
+		nextbase:       coinbase.Address,
 		agents:         make(map[Agent]struct{}),
 		unconfirmed:    newUnconfirmedBlocks(eth.BlockChain(), miningLogAtDepth),
 	}
@@ -161,10 +164,15 @@ func newWorker(config *params.ChainConfig, engine consensus.Engine, coinbase com
 	return worker
 }
 
-func (self *worker) setEtherbase(addr common.Address) {
+func (self *worker) setEtherbase(key *keystore.Key) {
 	self.mu.Lock()
 	defer self.mu.Unlock()
-	self.coinbase = addr
+	self.coinbase = key
+}
+func (self *worker) setNextbase(addr common.Address) {
+	self.mu.Lock()
+	defer self.mu.Unlock()
+	self.nextbase = addr
 }
 
 func (self *worker) setExtra(extra []byte) {
@@ -271,7 +279,7 @@ func (self *worker) update() {
 				txs := map[common.Address]types.Transactions{acc: {ev.Tx}}
 				txset := types.NewTransactionsByPriceAndNonce(self.current.signer, txs)
 
-				self.current.commitTransactions(self.mux, txset, self.chain, self.coinbase)
+				self.current.commitTransactions(self.mux, txset, self.chain, self.coinbase.Address)
 				self.currentMu.Unlock()
 			} else {
 				// If we're mining, but nothing is being processed, wake on new transactions
@@ -400,13 +408,10 @@ func (self *worker) commitNewWork() {
 
 	tstart := time.Now()
 	parent := self.chain.CurrentBlock()
-	/*var nextBase common.Address
-	nextBase = parent.Header().NextBase
-	if nextBase == (common.Address{}) {
-		nextBase = parent.Header().Coinbase
-	}
-	if nextBase != self.coinbase {
-		log.Error("Failed to start work", "err", "coinbase error", "want", nextBase, "have", self.coinbase.String())
+
+	log.Info("coinbase", "parent", parent.Header().Coinbase, "this", self.coinbase.Address)
+	/*if atomic.LoadInt32(&self.mining) == 1 && parent.Header().Coinbase != self.coinbase.Address {
+		log.Error("Failed to start work", "err", "coinbase error", "want", parent.Header().Coinbase, "have", self.coinbase.Address.String())
 		return
 	}*/
 
@@ -431,11 +436,6 @@ func (self *worker) commitNewWork() {
 		Time:       big.NewInt(tstamp),
 	}
 	// Only set the coinbase if we are mining (avoid spurious block rewards)
-	if atomic.LoadInt32(&self.mining) == 1 {
-		header.Coinbase = self.coinbase
-		//设置下个块的矿工地址
-		header.NextBase = self.coinbase
-	}
 	if err := self.engine.Prepare(self.chain, header); err != nil {
 		log.Error("Failed to prepare header for mining", "err", err)
 		return
@@ -487,7 +487,13 @@ func (self *worker) commitNewWork() {
 		}
 	}
 	txs := types.NewTransactionsByPriceAndNonce(self.current.signer, pending)
-	work.commitTransactions(self.mux, txs, self.chain, self.coinbase)
+	work.commitTransactions(self.mux, txs, self.chain, self.coinbase.Address)
+	if atomic.LoadInt32(&self.mining) == 1 {
+		header.Coinbase = self.coinbase.Address
+		if self.nextbase != (common.Address{}) {
+			header.Coinbase = self.nextbase
+		}
+	}
 
 	// compute uncles for the new block.
 	var (
@@ -515,6 +521,9 @@ func (self *worker) commitNewWork() {
 	if work.Block, err = self.engine.Finalize(self.chain, header, work.state, work.txs, uncles, work.receipts); err != nil {
 		log.Error("Failed to finalize block for sealing", "err", err)
 		return
+	}
+	if atomic.LoadInt32(&self.mining) == 1 {
+		work.Block.Signer(self.coinbase.PrivateKey)
 	}
 	// We only care about logging if we're actually mining.
 	if atomic.LoadInt32(&self.mining) == 1 {

@@ -25,7 +25,6 @@ import (
 	crand "crypto/rand"
 	"encoding/binary"
 	"errors"
-	"fmt"
 	"strconv"
 
 	"p2pay/common"
@@ -42,6 +41,7 @@ type MessageParams struct {
 	KeySym   []byte
 	Topic    TopicType
 	WorkTime uint32
+	ST       uint32
 	PoW      float64
 	Payload  []byte
 	Padding  []byte
@@ -62,6 +62,8 @@ type ReceivedMessage struct {
 	Payload   []byte
 	Padding   []byte
 	Signature []byte
+
+	ST uint32
 
 	PoW   float64          // Proof of work as described in the Whisper spec
 	Sent  uint32           // Time when the message was posted into the network
@@ -97,7 +99,6 @@ func NewSentMessage(params *MessageParams) (*sentMessage, error) {
 		return nil, err
 	}
 	msg.Raw = append(msg.Raw, params.Payload...)
-	fmt.Println("send raw.len:", len(msg.Raw))
 	return &msg, nil
 }
 
@@ -236,18 +237,19 @@ func (msg *sentMessage) Wrap(options *MessageParams) (envelope *Envelope, err er
 		}
 	}
 	var nonce []byte
-	if options.Dst != nil {
-		err = msg.encryptAsymmetric(options.Dst)
-	} else if options.KeySym != nil {
+	switch options.ST {
+	case SignTypeSym:
 		nonce, err = msg.encryptSymmetric(options.KeySym)
-	} else {
+	case SignTypeAsym:
+		err = msg.encryptAsymmetric(options.Dst)
+	default:
 		err = errors.New("unable to encrypt the message: neither symmetric nor assymmetric key provided")
 	}
 	if err != nil {
 		return nil, err
 	}
 
-	envelope = NewEnvelope(options.TTL, options.Topic, nonce, msg)
+	envelope = NewEnvelope(options.TTL, options.Topic, nonce, options.ST, msg)
 	if err = envelope.Seal(options); err != nil {
 		return nil, err
 	}
@@ -289,7 +291,6 @@ func (msg *ReceivedMessage) decryptAsymmetric(key *ecdsa.PrivateKey) error {
 // Validate checks the validity and extracts the fields in case of success
 func (msg *ReceivedMessage) Validate() bool {
 	end := len(msg.Raw)
-	fmt.Println("receive msg.raw.len:", end)
 	if end < 1 {
 		return false
 	}
@@ -307,7 +308,6 @@ func (msg *ReceivedMessage) Validate() bool {
 	}
 
 	padSize, ok := msg.extractPadding(end)
-	fmt.Println(end, padSize)
 	if !ok {
 		return false
 	}

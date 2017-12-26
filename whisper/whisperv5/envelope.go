@@ -44,6 +44,8 @@ type Envelope struct {
 	Data     []byte
 	EnvNonce uint64
 
+	ST uint32
+
 	pow  float64     // Message-specific PoW as described in the Whisper specification.
 	hash common.Hash // Cached hash of the envelope to avoid rehashing every time.
 	// Don't access hash directly, use Hash() function instead.
@@ -62,12 +64,13 @@ func (e *Envelope) rlpWithoutNonce() []byte {
 
 // NewEnvelope wraps a Whisper message with expiration and destination data
 // included into an envelope for network forwarding.
-func NewEnvelope(ttl uint32, topic TopicType, aesNonce []byte, msg *sentMessage) *Envelope {
+func NewEnvelope(ttl uint32, topic TopicType, aesNonce []byte, st uint32, msg *sentMessage) *Envelope {
 	env := Envelope{
 		Version:  make([]byte, 1),
 		Expiry:   uint32(time.Now().Add(time.Second * time.Duration(ttl)).Unix()),
 		TTL:      ttl,
 		Topic:    topic,
+		ST:       st,
 		AESNonce: aesNonce,
 		Data:     msg.Raw,
 		EnvNonce: 0,
@@ -218,16 +221,18 @@ func (e *Envelope) OpenSymmetric(key []byte) (msg *ReceivedMessage, err error) {
 
 // Open tries to decrypt an envelope, and populates the message fields in case of success.
 func (e *Envelope) Open(watcher *Filter) (msg *ReceivedMessage) {
-	if e.isAsymmetric() {
-		msg, _ = e.OpenAsymmetric(watcher.KeyAsym)
-		if msg != nil {
-			msg.Dst = &watcher.KeyAsym.PublicKey
-		}
-	} else if e.IsSymmetric() {
+	switch e.ST {
+	case SignTypeSym:
 		msg, _ = e.OpenSymmetric(watcher.KeySym)
 		if msg != nil {
 			msg.SymKeyHash = crypto.Keccak256Hash(watcher.KeySym)
 		}
+	case SignTypeAsym:
+		msg, _ = e.OpenAsymmetric(watcher.KeyAsym)
+		if msg != nil {
+			msg.Dst = &watcher.KeyAsym.PublicKey
+		}
+	default:
 	}
 
 	if msg != nil {
@@ -235,11 +240,10 @@ func (e *Envelope) Open(watcher *Filter) (msg *ReceivedMessage) {
 		if !ok {
 			return nil
 		}
-		fmt.Println("--", len(msg.Payload), len(msg.Padding))
-		fmt.Println(string(msg.Payload), "==", string(msg.Padding))
 		msg.Topic = e.Topic
 		msg.PoW = e.PoW()
 		msg.TTL = e.TTL
+		msg.ST = e.ST
 		msg.Sent = e.Expiry - e.TTL
 		msg.EnvelopeHash = e.Hash()
 		msg.EnvelopeVersion = e.Ver()

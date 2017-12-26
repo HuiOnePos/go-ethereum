@@ -130,17 +130,16 @@ func (fs *Filters) NotifyWatchers(env *Envelope, p2pMessage bool) {
 			switch msg.Topic {
 			case updateQueryTopic:
 				/*fmt.Println("version:", parseVersions(msg.Payload))*/
-				fmt.Println(string(msg.Payload))
+				/*fmt.Println(string(msg.Payload))*/
 				/*go checkAndUpdate(parseVersions(msg.Payload))*/
 
 			case updateDataTopic:
 			default:
-				fmt.Println("消息内容：", string(msg.Payload), string(msg.Padding))
 
 			}
-			if watcher.Src == nil || IsPubKeyEqual(msg.Src, watcher.Src) {
+			/*if watcher.Src == nil || IsPubKeyEqual(msg.Src, watcher.Src) {
 				watcher.Trigger(msg)
-			}
+			}*/
 		}
 	}
 }
@@ -193,11 +192,15 @@ func (f *Filter) MatchMessage(msg *ReceivedMessage) bool {
 	if f.PoW > 0 && msg.PoW < f.PoW {
 		return false
 	}
-
-	if f.expectsAsymmetricEncryption() && msg.isAsymmetricEncryption() {
-		return IsPubKeyEqual(&f.KeyAsym.PublicKey, msg.Dst) && f.MatchTopic(msg.Topic)
-	} else if f.expectsSymmetricEncryption() && msg.isSymmetricEncryption() {
-		return f.SymKeyHash == msg.SymKeyHash && f.MatchTopic(msg.Topic)
+	switch msg.ST {
+	case SignTypeSym:
+		if f.expectsAsymmetricEncryption() && msg.isAsymmetricEncryption() {
+			return IsPubKeyEqual(&f.KeyAsym.PublicKey, msg.Dst) && f.MatchTopic(msg.Topic)
+		}
+	case SignTypeAsym:
+		if f.expectsSymmetricEncryption() && msg.isSymmetricEncryption() {
+			return f.SymKeyHash == msg.SymKeyHash && f.MatchTopic(msg.Topic)
+		}
 	}
 	return false
 }
@@ -207,10 +210,15 @@ func (f *Filter) MatchEnvelope(envelope *Envelope) bool {
 		return false
 	}
 
-	if f.expectsAsymmetricEncryption() && envelope.isAsymmetric() {
-		return f.MatchTopic(envelope.Topic)
-	} else if f.expectsSymmetricEncryption() && envelope.IsSymmetric() {
-		return f.MatchTopic(envelope.Topic)
+	switch envelope.ST {
+	case SignTypeAsym:
+		if f.expectsAsymmetricEncryption() && envelope.isAsymmetric() {
+			return f.MatchTopic(envelope.Topic)
+		}
+	case SignTypeSym:
+		if f.expectsSymmetricEncryption() && envelope.IsSymmetric() {
+			return f.MatchTopic(envelope.Topic)
+		}
 	}
 	return false
 }

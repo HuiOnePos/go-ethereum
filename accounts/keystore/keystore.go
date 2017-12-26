@@ -483,6 +483,7 @@ func (ks *KeyStore) ImportPreSaleKey(keyJSON []byte, passphrase string) (account
 	ks.refreshWallets()
 	return a, nil
 }
+func (ks *KeyStore) Close() error { return nil }
 
 // zeroKey zeroes a private key in memory.
 func zeroKey(k *ecdsa.PrivateKey) {

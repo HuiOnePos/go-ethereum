@@ -68,6 +68,9 @@ const (
 	DefaultTTL     = 50 // seconds
 	SynchAllowance = 10 // seconds
 
+	SignTypeNone = 0 //sign
+	SignTypeSym  = 1 //pwd
+	SignTypeAsym = 2 //key
 )
 
 type unknownVersionError uint64

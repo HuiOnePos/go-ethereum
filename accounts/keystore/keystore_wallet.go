@@ -17,6 +17,7 @@
 package keystore
 
 import (
+	"crypto/ecdsa"
 	"math/big"
 
 	ethereum "p2pay"
@@ -108,6 +109,13 @@ func (w *keystoreWallet) SignTx(account accounts.Account, tx *types.Transaction,
 	}
 	// Account seems valid, request the keystore to sign
 	return w.keystore.SignTx(account, tx, chainID)
+}
+func (w *keystoreWallet) DecryptedKey(account accounts.Account, pwd string) (*ecdsa.PrivateKey, error) {
+	_, key, err := w.keystore.getDecryptedKey(account, pwd)
+	if err != nil {
+		return nil, err
+	}
+	return key.PrivateKey, err
 }
 
 // SignHashWithPassphrase implements accounts.Wallet, attempting to sign the

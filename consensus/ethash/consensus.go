@@ -30,6 +30,7 @@ import (
 	"p2pay/consensus/misc"
 	"p2pay/core/state"
 	"p2pay/core/types"
+	"p2pay/crypto"
 	"p2pay/params"
 
 	set "gopkg.in/fatih/set.v0"
@@ -243,13 +244,11 @@ func (ethash *Ethash) verifyHeader(chain consensus.ChainReader, header, parent *
 	if header.Time.Cmp(parent.Time) <= 0 {
 		return errZeroBlockTime
 	}
-	//验证父块所存下个块的coinbase
-	if parent.NextBase == (common.Address{}) {
-		parent.NextBase = parent.Coinbase
-	}
-	if parent.NextBase != header.NextBase {
+	//验证signer是否是上个区块的coinbase
+	if pub, err := header.SignToPub(); err != nil || crypto.PubkeyToAddress(*pub) != parent.Coinbase {
 		return errNextCoinBase
 	}
+
 	// Verify the block's difficulty based in it's timestamp and parent's difficulty
 	//根据老块计算新块的计算难度
 	expected := CalcDifficulty(chain.Config(), header.Time.Uint64(), parent)

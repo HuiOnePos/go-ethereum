@@ -23,7 +23,6 @@ import (
 	"math/big"
 	"runtime"
 	"sync"
-	"sync/atomic"
 
 	"p2pay/accounts"
 	"p2pay/common"
@@ -312,16 +311,16 @@ func (s *Ethereum) Etherbase() (eb common.Address, err error) {
 }
 
 // set in js console via admin interface or wrapper from cli flags
-func (self *Ethereum) SetEtherbase(etherbase common.Address) {
+func (self *Ethereum) SetEtherbase(etherbase common.Address, pwd string) error {
 	self.lock.Lock()
 	self.etherbase = etherbase
 	self.lock.Unlock()
 
-	self.miner.SetEtherbase(etherbase)
+	return self.miner.SetEtherbase(etherbase, pwd)
 }
 
-func (s *Ethereum) StartMining(local bool) error {
-	eb, err := s.Etherbase()
+func (s *Ethereum) StartMining() error {
+	/*eb, err := s.Etherbase()
 	if err != nil {
 		log.Error("Cannot start mining without etherbase", "err", err)
 		return fmt.Errorf("etherbase missing: %v", err)
@@ -340,8 +339,8 @@ func (s *Ethereum) StartMining(local bool) error {
 		// so noone will ever hit this path, whereas marking sync done on CPU mining
 		// will ensure that private networks work in single miner mode too.
 		atomic.StoreUint32(&s.protocolManager.acceptTxs, 1)
-	}
-	go s.miner.Start(eb)
+	}*/
+	go s.miner.Start()
 	return nil
 }
 

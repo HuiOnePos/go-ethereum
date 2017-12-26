@@ -435,8 +435,8 @@ web3._extend({
 		new web3._extend.Method({
 			name: 'setEtherbase',
 			call: 'miner_setEtherbase',
-			params: 1,
-			inputFormatter: [web3._extend.formatters.inputAddressFormatter]
+			params: 2,
+			inputFormatter: [web3._extend.formatters.inputAddressFormatter,null]
 		}),
 		new web3._extend.Method({
 			name: 'setExtra',
