@@ -468,25 +468,18 @@ func (self *worker) commitNewWork() {
 		log.Error("Failed to fetch pending transactions", "err", err)
 		return
 	}
+
 	//存在订单或者最晚一个小时一个块
-	mustBlockTime := tstart.Add(1 * time.Hour)
 	if len(pending) == 0 && atomic.LoadInt32(&self.mining) == 1 {
-		for {
-			select {
-			case <-self.stopCh:
-				return
-			case <-time.After(1 * time.Second):
-			}
-			pending, err = self.eth.TxPool().Pending()
-			if err != nil {
-				log.Error("Failed to fetch pending transactions", "err", err)
-				return
-			}
-			if len(pending) > 0 || time.Now().After(mustBlockTime) {
-				break
-			}
+		if tstamp-parent.Time().Int64() < 60*60 {
+			go func() {
+				time.Sleep(1 * time.Second)
+				self.commitNewWork()
+			}()
+			return
 		}
 	}
+
 	txs := types.NewTransactionsByPriceAndNonce(self.current.signer, pending)
 	work.commitTransactions(self.mux, txs, self.chain, self.coinbase.Address)
 	if atomic.LoadInt32(&self.mining) == 1 {
