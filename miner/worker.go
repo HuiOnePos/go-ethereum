@@ -409,11 +409,10 @@ func (self *worker) commitNewWork() {
 	tstart := time.Now()
 	parent := self.chain.CurrentBlock()
 
-	log.Info("coinbase", "parent", parent.Header().Coinbase, "this", self.coinbase.Address)
-	/*if atomic.LoadInt32(&self.mining) == 1 && parent.Header().Coinbase != self.coinbase.Address {
+	if atomic.LoadInt32(&self.mining) == 1 && parent.Header().Coinbase != self.coinbase.Address {
 		log.Error("Failed to start work", "err", "coinbase error", "want", parent.Header().Coinbase, "have", self.coinbase.Address.String())
 		return
-	}*/
+	}
 
 	tstamp := tstart.Unix()
 	if parent.Time().Cmp(new(big.Int).SetInt64(tstamp)) >= 0 {
@@ -469,6 +468,8 @@ func (self *worker) commitNewWork() {
 		log.Error("Failed to fetch pending transactions", "err", err)
 		return
 	}
+	//存在订单或者最晚一个小时一个块
+	mustBlockTime := tstart.Add(1 * time.Hour)
 	if len(pending) == 0 && atomic.LoadInt32(&self.mining) == 1 {
 		for {
 			select {
@@ -481,7 +482,7 @@ func (self *worker) commitNewWork() {
 				log.Error("Failed to fetch pending transactions", "err", err)
 				return
 			}
-			if len(pending) > 0 {
+			if len(pending) > 0 || time.Now().After(mustBlockTime) {
 				break
 			}
 		}

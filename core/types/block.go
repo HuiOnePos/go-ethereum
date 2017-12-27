@@ -105,19 +105,6 @@ func (h *Header) Hash() common.Hash {
 	return rlpHash(h)
 }
 func (h *Header) HashForSign() common.Hash {
-	fmt.Println(
-		h.ParentHash,
-		h.Coinbase,
-		h.Root,
-		h.TxHash,
-		h.ReceiptHash,
-		h.Bloom,
-		h.Difficulty,
-		h.Number,
-		h.GasLimit,
-		h.GasUsed,
-		h.Time,
-		h.Extra)
 	return rlpHash([]interface{}{
 		h.ParentHash,
 		h.Coinbase,
