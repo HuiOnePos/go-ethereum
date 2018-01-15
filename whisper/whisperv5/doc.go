@@ -56,7 +56,7 @@ const (
 	keyIdSize       = 32
 
 	MaxMessageSize        = uint32(10 * 1024 * 1024) // maximum accepted size of a message.
-	DefaultMaxMessageSize = uint32(1024 * 1024)
+	DefaultMaxMessageSize = uint32(1024 * 1024 * 2)
 	DefaultMinimumPoW     = 0.2
 
 	padSizeLimit      = 256 // just an arbitrary number, could be changed without breaking the protocol (must not exceed 2^24)

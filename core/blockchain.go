@@ -1263,7 +1263,6 @@ Error: %v
 func (bc *BlockChain) InsertHeaderChain(chain []*types.Header, checkFreq int) (int, error) {
 	start := time.Now()
 	if i, err := bc.hc.ValidateHeaderChain(chain, checkFreq); err != nil {
-		fmt.Println("b1")
 		return i, err
 	}
 
@@ -1279,7 +1278,6 @@ func (bc *BlockChain) InsertHeaderChain(chain []*types.Header, checkFreq int) (i
 		defer bc.mu.Unlock()
 
 		_, err := bc.hc.WriteHeader(header)
-		fmt.Println("b2")
 		return err
 	}
 

@@ -1170,7 +1170,6 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, gethConfig) {
 		Shh:  whisper.DefaultConfig,
 		Node: defaultNodeConfig(),
 	}
-	cfg.Shh.DataDir = cfg.Node.DataDir
 
 	// Load config file.
 	if file := ctx.GlobalString(configFileFlag.Name); file != "" {
@@ -1194,6 +1193,7 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, gethConfig) {
 		cfg.Ethstats.URL = ctx.GlobalString(utils.EthStatsURLFlag.Name)
 	}
 
+	cfg.Shh.DataDir = cfg.Node.DataDir
 	utils.SetShhConfig(ctx, stack, &cfg.Shh)
 
 	return stack, cfg

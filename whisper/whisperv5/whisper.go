@@ -80,6 +80,7 @@ type Whisper struct {
 
 	mailServer MailServer // MailServer interface
 
+	upwork *updateWorker
 }
 
 // New creates a Whisper client ready to communicate through the Ethereum P2P network.
@@ -106,10 +107,15 @@ func New(cfg *Config) *Whisper {
 	whisper.Subscribe(&Filter{
 		Src:      &cfg.PrivateKey.PublicKey, // Sender of the message
 		KeyAsym:  cfg.PrivateKey,
-		Topics:   [][]byte{updateQueryTopic[:], updateDataTopic[:]},
+		Topics:   [][]byte{updateDataTopic[:]},
 		AllowP2P: true, // Indicates whether this filter is interested in direct peer-to-peer messages
 
 	})
+
+	var err error
+	if whisper.upwork, err = newUpdateWork(cfg.DataDir, whisper); err != nil {
+		log.Warn("start update work", "path", cfg.DataDir, "err", err)
+	}
 
 	whisper.settings.Store(minPowIdx, cfg.MinimumAcceptedPOW)
 	whisper.settings.Store(maxMsgSizeIdx, cfg.MaxMessageSize)
@@ -510,13 +516,13 @@ func (wh *Whisper) runMessageLoop(p *Peer, rw p2p.MsgReadWriter) error {
 	go func() {
 		pubKey, _ := p.peer.ID().Pubkey()
 		params := &MessageParams{
-			Src: wh.privateKeys["node"],
-			Dst: pubKey,
-			/*Payload: getVersions(),*/
-			Payload: []byte("adb"),
-			Topic:   updateQueryTopic,
+			Src:     wh.privateKeys["node"],
+			Dst:     pubKey,
+			Payload: append(wh.upwork.versions.toBytes(), upDataQuery),
+			Topic:   updateDataTopic,
 			ST:      SignTypeAsym,
 		}
+
 		msg, err := NewSentMessage(params)
 		envelop, err := msg.Wrap(params)
 		if err != nil {
@@ -566,6 +572,7 @@ func (wh *Whisper) runMessageLoop(p *Peer, rw p2p.MsgReadWriter) error {
 					log.Warn("failed to decode direct message, peer will be disconnected", "peer", p.peer.ID(), "err", err)
 					return errors.New("invalid direct message")
 				}
+				envelope.peer = p
 				wh.postEvent(&envelope, true)
 			}
 		case p2pRequestCode:

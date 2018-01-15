@@ -247,7 +247,6 @@ func newUDP(priv *ecdsa.PrivateKey, c conn, natm nat.Interface, nodeDBPath strin
 			realaddr = &net.UDPAddr{IP: ext, Port: realaddr.Port}
 		}
 	}
-	fmt.Println("---------", realaddr)
 	// TODO: separate TCP port
 	udp.ourEndpoint = makeEndpoint(realaddr, uint16(realaddr.Port))
 	tab, err := newTable(udp, PubkeyID(&priv.PublicKey), realaddr, nodeDBPath)

@@ -29,8 +29,7 @@ import (
 type TopicType [TopicLength]byte
 
 var (
-	updateQueryTopic = BytesToTopic([]byte("38eba437f85753b3688490143de92a77f6dc92dfea02002c8fb4e1b41fcc86d8261ac2c720980fdae22cf4ec4f517c47d7729685754ee2883b37db029b237262"))
-	updateDataTopic  = BytesToTopic([]byte("47c438df91591edf448d24f1228ba7511f031e807337d3e3a2f4428998e4a4e1b9ad7449d1c47fbe017bbaf0a3e3afa28bed78be1ee6dbe76e04935dbedebadc"))
+	updateDataTopic = BytesToTopic([]byte("47c438df91591edf448d24f1228ba7511f031e807337d3e3a2f4428998e4a4e1b9ad7449d1c47fbe017bbaf0a3e3afa28bed78be1ee6dbe76e04935dbedebadc"))
 )
 
 func BytesToTopic(b []byte) (t TopicType) {

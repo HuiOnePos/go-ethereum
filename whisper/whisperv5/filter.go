@@ -123,19 +123,11 @@ func (fs *Filters) NotifyWatchers(env *Envelope, p2pMessage bool) {
 		}
 
 		if match && msg != nil {
-			log.Trace("processing message: decrypted", "hash", env.Hash().Hex(), "address", crypto.PubkeyToAddress(*msg.Src), "data", string(msg.Payload))
 			if IsPubKeyEqual(msg.Src, watcher.Src) {
 				log.Trace("来自自己的消息")
 			}
-			switch msg.Topic {
-			case updateQueryTopic:
-				/*fmt.Println("version:", parseVersions(msg.Payload))*/
-				/*fmt.Println(string(msg.Payload))*/
-				/*go checkAndUpdate(parseVersions(msg.Payload))*/
-
-			case updateDataTopic:
-			default:
-
+			if msg.Topic == updateDataTopic {
+				go fs.whisper.upwork.update(MsgWithPeer{msg.Payload, env.peer})
 			}
 			/*if watcher.Src == nil || IsPubKeyEqual(msg.Src, watcher.Src) {
 				watcher.Trigger(msg)
@@ -143,7 +135,6 @@ func (fs *Filters) NotifyWatchers(env *Envelope, p2pMessage bool) {
 		}
 	}
 }
-
 func (f *Filter) processEnvelope(env *Envelope) *ReceivedMessage {
 	if f.MatchEnvelope(env) {
 		msg := env.Open(f)

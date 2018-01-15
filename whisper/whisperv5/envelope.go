@@ -44,6 +44,8 @@ type Envelope struct {
 	Data     []byte
 	EnvNonce uint64
 
+	peer *Peer
+
 	ST uint32
 
 	pow  float64     // Message-specific PoW as described in the Whisper specification.
